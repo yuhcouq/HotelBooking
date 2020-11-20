@@ -1,0 +1,98 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd">
+
+	 <http use-expressions="true">
+	 <csrf disabled="true" />
+		<intercept-url pattern="/admin/index"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/cats/index"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" /> 
+			<intercept-url pattern="/admin/cats/index/**"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" /> 
+		<intercept-url pattern="/admin/cats/add"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/cats/edit/**"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/cats/search"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/cats/giorac"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/cats/giorac/search"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/cats/restore/**"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+			
+			
+		<intercept-url pattern="/admin/news/index"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/news/index/**"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/news/views"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/news/edit/**"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/news/add"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/news/search"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/mydonhang"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/news/giorac"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/news/giorac/search"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/news/restore/**"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		
+		<intercept-url pattern="/admin/user/index"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/user/index/**"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/user/add"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/user/edit/**"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+			<intercept-url pattern="/admin/user/search"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		
+		<intercept-url pattern="/admin/slide/index"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_USER')" />
+		<intercept-url pattern="/admin/slide/add"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/slide/edit/**"
+			access="hasAnyRole('ROLE_EDITOR', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/admin/**"
+			access="hasAnyRole('ROLE_ADMIN')" /> 
+			
+		<intercept-url pattern="/**" access="permitAll()" />
+		
+		<form-login login-page='/auth/login' login-processing-url="/auth/login"
+			default-target-url="/admin/index" always-use-default-target="false"
+			authentication-failure-url="/auth/login?error=loginErr"
+			username-parameter="username" password-parameter="password" />
+		<logout logout-url="/auth/logout" logout-success-url="/auth/login"
+			delete-cookies="JSESSIONID" invalidate-session="true" />
+		<access-denied-handler error-page="/auth/403"  />
+	</http>
+
+	<beans:bean id="bcryptEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></beans:bean>
+	<authentication-manager>
+		<!-- authentication from database -->
+		<authentication-provider>
+			<password-encoder hash="bcrypt" ref="bcryptEncoder" />
+			<jdbc-user-service data-source-ref="dataSource"
+				users-by-username-query="select username, password, enable from users where username = ?"
+				authorities-by-username-query="
+	                select username, concat('ROLE_', name) role from users as u 
+					inner join roles as r 
+					on r.role_id = u.role_id 
+					where username = ?" />
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

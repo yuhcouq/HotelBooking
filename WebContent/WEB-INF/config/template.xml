@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+	<!-- Admin Template -->
+	<definition name="admin.template"
+		template="/WEB-INF/templates/admin/template.jsp">
+		<put-attribute name="left-bar"
+			value="/WEB-INF/templates/admin/left-bar.jsp"></put-attribute>
+		<put-attribute name="header"
+			value="/WEB-INF/templates/admin/header.jsp"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+		<put-attribute name="footer"
+			value="/WEB-INF/templates/admin/footer.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin Index -->
+	<definition name="admin.index.index"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/index/index.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin Hotel -->
+	<definition name="admin.hotel.index"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/hotel/index.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.hotel.add" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/hotel/add.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.hotel.edit" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/hotel/edit.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin City -->
+	<definition name="admin.city.index" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/city/index.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.city.add" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/city/add.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.city.edit" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/city/edit.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin Room -->
+	<definition name="admin.room.index" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/room/index.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.room.add" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/room/add.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.room.edit" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/room/edit.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin Room Image -->
+	<definition name="admin.room.views_image"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/room_image/views_image.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.room.add_image"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/room_image/add_image.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.room.edit_image"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/room_image/edit_image.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin User -->
+	<definition name="admin.user.index" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/user/index.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.user.add" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/user/add.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.user.edit" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/user/edit.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin Hotel Review -->
+	<definition name="admin.hotelreview.index"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/hotel_review/index.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.hotelreview.edit"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/hotel_review/edit.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin Room Review -->
+	<definition name="admin.roomreview.index"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/room_review/index.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.roomreview.edit"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/room_review/edit.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin Slide Review -->
+	<definition name="admin.slide.index"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/slide/index.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.slide.add" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/slide/add.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.slide.edit" extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/slide/edit.jsp"></put-attribute>
+	</definition>
+
+	<!-- Admin booking -->
+	<definition name="admin.booking.index"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/booking/index.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.booking.views"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/booking/views.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.booking.customer_add"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/booking/customer_add.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.booking.booking_add"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/booking/booking_add.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.booking.customer_edit"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/booking/customer_edit.jsp"></put-attribute>
+	</definition>
+	<definition name="admin.booking.booking_edit"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/booking/booking_edit.jsp"></put-attribute>
+	</definition>
+
+	<!-- Public Statistical -->
+	<definition name="admin.booking.statistical"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/statistical/index.jsp"></put-attribute>
+	</definition>
+
+	<!-- Public Template -->
+	<definition name="public.template"
+		template="/WEB-INF/templates/public/template.jsp">
+		<put-attribute name="header"
+			value="/WEB-INF/templates/public/header.jsp"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+		<put-attribute name="footer"
+			value="/WEB-INF/templates/public/footer.jsp"></put-attribute>
+	</definition>
+
+	<!-- Public index -->
+	<definition name="public.index.index"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/index.jsp"></put-attribute>
+	</definition>
+	<definition name="public.room_search"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/room-search.jsp"></put-attribute>
+	</definition>
+	<definition name="public.room_check"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/room-check.jsp"></put-attribute>
+	</definition>
+	<definition name="public.rooms" extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/room.jsp"></put-attribute>
+	</definition>
+	<definition name="public.hotels" extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/hotel.jsp"></put-attribute>
+	</definition>
+	<definition name="public.single_room"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/single-room.jsp"></put-attribute>
+	</definition>
+
+	<!-- booking -->
+	<definition name="public.quantity"
+		template="/WEB-INF/views/public/quantity.jsp">
+	</definition>
+	<definition name="public.cartbooking_delete"
+		template="/WEB-INF/views/public/cart-booking-delete.jsp">
+	</definition>
+	<definition name="public.cartbooking"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/cart-booking.jsp"></put-attribute>
+	</definition>
+	<definition name="public.infobooking"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/info-booking.jsp"></put-attribute>
+	</definition>
+	<definition name="public.login" extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/login.jsp"></put-attribute>
+	</definition>
+	<definition name="public.pay-booking"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/pay-booking.jsp"></put-attribute>
+	</definition>
+	<definition name="public.pay-complete"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/pay-complete.jsp"></put-attribute>
+	</definition>
+	<definition name="public.my-info"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/info-customer.jsp"></put-attribute>
+	</definition>
+	<definition name="public.my-booking"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/my-booking.jsp"></put-attribute>
+	</definition>
+	<definition name="public.reviews"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/reviews.jsp"></put-attribute>
+	</definition>
+	<definition name="public.contact"
+		extends="public.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/public/contact.jsp"></put-attribute>
+	</definition>
+
+	<!-- error 404 -->
+	<definition name="err.403"
+		template="/WEB-INF/views/admin/err/403.jsp">
+	</definition>
+</tiles-definitions>
