@@ -146,18 +146,25 @@
 									style="border: 1px solid #CED4DA; width: 635px;"></textarea>
 							</div>
 						</div>
-						<%-- <div class="col-md-6">
-							<div class="form-group">
-								<input type="text" name="id_user" value="${userPublic.id_user}"
-									style="display: none;">
-							</div>
-						</div> --%>
-						<div class="col-md-6">
-							<div class="form-group">
-								<input type="text" name="id_user" value="1"
-									style="display: none;">
-							</div>
-						</div>
+						<c:choose>
+							<c:when test="${not empty userPublic}">
+								<div class="col-md-6">
+									<div class="form-group">
+										<input type="text" name="id_user" value="${userPublic.id_user}"
+											style="display: none;">
+									</div>
+								</div> 
+							</c:when>
+							<c:otherwise>
+								<div class="col-md-6">
+									<div class="form-group">
+										<input type="text" name="id_user" value="0"
+											style="display: none;">
+									</div>
+								</div>
+							</c:otherwise>
+						
+						</c:choose>
 					</div>
 					<!-- END -->
 					<div class="col-md-6">

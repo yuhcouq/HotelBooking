@@ -120,7 +120,29 @@ public class AdminUser {
 
 	@RequestMapping(value = "/edit/{id_user}", method = RequestMethod.GET)
 	public String edit(@PathVariable("id_user") int id_user, ModelMap model) {
-		model.addAttribute("user", userDao.getUser(id_user));
+		User user = (User) userDao.getUser(id_user);
+		model.addAttribute("user", user);
+		if(user.getRole_id()==3) {
+			model.addAttribute("checkprofile", 1);
+		}
+		model.addAttribute("listHotels", hotelDao.getListHotel());
+		if(user.getHotel_id()!= -1 && user.getHotel_id() != 0) {
+			model.addAttribute("hotel",  hotelDao.getHotel(user.getHotel_id()));
+		}
+		
+		return "admin.user.edit";
+	}
+	
+	@RequestMapping(value = "/editprofile", method = RequestMethod.GET)
+	public String editprofile(ModelMap model,HttpSession session) {
+		User userAdmin = (User) session.getAttribute("userAdmin");
+		model.addAttribute("user", userAdmin);
+		model.addAttribute("checkprofile", 1);
+		model.addAttribute("listHotels", hotelDao.getListHotel());
+		if(userAdmin.getHotel_id()!= -1 && userAdmin.getHotel_id() != 0) {
+			model.addAttribute("hotel",  hotelDao.getHotel(userAdmin.getHotel_id()));
+		}
+		
 		return "admin.user.edit";
 	}
 
@@ -129,6 +151,7 @@ public class AdminUser {
 			HttpServletRequest request, @PathVariable("id_user") int id_user, RedirectAttributes ra,
 			HttpSession session) {
 		String password = "";
+		User userAdmin = (User) session.getAttribute("userAdmin");
 		User userOld = userDao.getUser(id_user);
 		if ("".equals(user.getPassword())) {
 			password = userOld.getPassword();
@@ -159,12 +182,20 @@ public class AdminUser {
 		}
 		user.setAvatar(reFileName);
 		user.setUpdatedAt(defines.getDateDay());
-
-		if (userDao.editUser(user) > 0) {
-			ra.addFlashAttribute("success", "Cập nhật thành công!");
-		} else {
-			ra.addFlashAttribute("error", "Hệ thống đang bảo trì, vui lòng thực hiện chức năng này sau!");
+		if(userAdmin.getRole_id() == 1) {
+			if (userDao.editUserByAdmin(user) > 0) {
+				ra.addFlashAttribute("success", "Cập nhật thành công!");
+			} else {
+				ra.addFlashAttribute("error", "Hệ thống đang bảo trì, vui lòng thực hiện chức năng này sau!");
+			}
+		}else {
+			if (userDao.editUser(user) > 0) {
+				ra.addFlashAttribute("success", "Cập nhật thành công!");
+			} else {
+				ra.addFlashAttribute("error", "Hệ thống đang bảo trì, vui lòng thực hiện chức năng này sau!");
+			}
 		}
+		
 		return "redirect:/admin/user/index/" + session.getAttribute("role");
 	}
 

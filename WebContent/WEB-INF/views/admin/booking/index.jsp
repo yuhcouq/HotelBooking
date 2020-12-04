@@ -49,7 +49,6 @@
 										<th class="table-function">Đơn đặt phòng</th>
 										<c:if test="${userAdmin.role_id != 1}">
 											<th style="width: 170px;">Chức năng</th>
-											<th class="table-function">Đã thanh toán</th>
 										</c:if>
 									</tr>
 								</thead>
@@ -106,15 +105,7 @@
 															<span><strong>Xóa</strong></span>
 														</a>
 													</p></td>
-													<c:if test="${booking.paid == 100}">
-														<td><p>complete</p></td>
-													</c:if>
-													<c:if test="${booking.paid != 100}">
-														<td>
-															<p>${booking.paid}%</p>
-															<a class="btn btn-primary a-btn-slide-text" style="background-color: #F5F5F5; display: inline;" href="${pageContext.request.contextPath }/admin/booking/paid/${booking.id_booking}"><span><strong>thanh toán</strong></span></a>
-														</td>
-													</c:if>
+													
 											</c:if>
 										</tr>
 									</c:forEach>

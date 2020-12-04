@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@include file="/templates/taglib.jsp"%>
 <!-- Breadcrumb Area Start -->
+
 <div class="breadcrumb-area bg-img bg-overlay jarallax"
 	style="background-image: url(${pageContext.request.contextPath }/templates/public/img/bg-img/16.jpg);">
 	<div class="container h-100">
@@ -83,10 +84,10 @@
 						<c:forEach var="i" begin="1" end="${sumPage}">
 							<li class="page-item"><a class="page-link"
 								<c:if test="${page == i }">style="background-color: #24C5B5"</c:if>
-								href="${pageContext.request.contextPath }/public/rooms/${i}">${i}</a></li>
+								href="${pageContext.request.contextPath }/public/rooms/${i}/<c:choose><c:when test="${not empty id_hotel}">${id_hotel}</c:when></c:choose>">${i}</a></li>
 						</c:forEach>
 						<li class="page-item"><a class="page-link"
-							href="${pageContext.request.contextPath }/public/rooms/${sumPage}">End
+							href="${pageContext.request.contextPath }/public/rooms/${sumPage}/<c:choose><c:when test="${not empty id_hotel}">${id_hotel}</c:when></c:choose>">End
 								<i class="fa fa-angle-right"></i>
 						</a></li>
 					</ul>

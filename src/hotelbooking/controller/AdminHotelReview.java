@@ -44,7 +44,17 @@ public class AdminHotelReview {
 			if (userAdmin.getRole_id() == 1) {
 				model.addAttribute("listHotelReview", hotelReviewDao.getListHotelReviews());
 				return "admin.hotelreview.index";
-			} else {
+			}else if(userAdmin.getRole_id() == 2 || userAdmin.getRole_id() == 3) { 
+				if(userAdmin.getHotel_id()>0) {
+					model.addAttribute("listHotelReview", hotelReviewDao.getListReviewOfHotels(userAdmin.getHotel_id()));
+					model.addAttribute("checkrole",2);
+					return "admin.hotelreview.index";
+				}else {
+					ra.addFlashAttribute("error", "Bạn không thể thực hiện chức năng này!");
+					return "redirect:/admin/index";
+				}
+				
+			}else{
 				ra.addFlashAttribute("error", "Bạn không thể thực hiện chức năng này!");
 				return "redirect:/admin/index";
 			}
@@ -58,6 +68,17 @@ public class AdminHotelReview {
 		model.addAttribute("listHotels", hotelDao.getListHotel());
 		model.addAttribute("hotelreview", hotelReviewDao.getHotelReview(id_review));
 		return "admin.hotelreview.edit";
+	}
+	
+	@RequestMapping(value = "/request/{id_review}", method = RequestMethod.GET)
+	public String editrequest(@PathVariable("id_review") int id_review, ModelMap model,RedirectAttributes ra) {
+		
+		if (hotelReviewDao.editHotelReviewRequest(id_review) > 0) {
+			ra.addFlashAttribute("success", "Yêu cầu xóa thành công!");
+		} else {
+			ra.addFlashAttribute("error", "Hệ thống đang bảo trì, vui lòng thực hiện chức năng này sau!");
+		}
+		return "redirect:/admin/hotelreview/index";
 	}
 
 	@RequestMapping(value = "/edit/{id_review}", method = RequestMethod.POST)

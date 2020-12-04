@@ -1,15 +1,38 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="/templates/taglib.jsp"%>
+<%@page import="java.util.List"%>
+<%@page import="hotelbooking.model.Booking"%>
 <div class="data-table-area mg-b-15">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="sparkline13-list">
 					<div class="sparkline13-graph">
-						<div class="row">
-							<h3 style="margin-left: 10px; text-align: center;">Thống kê</h3>
-						</div>
+						<c:if test="${empty find}">
+							<div class="row ">
+								<h3 class="tk" style="margin-left: 10px; text-align: center;">Thống kê theo tuần</h3>
+							</div>
+							<div class="form-group-inner" style="margin-bottom: 50px">
+								<label>Thống kê theo</label>
+								<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+									<div class="chosen-select-single mg-b-20">
+										<select data-placeholder="Choose a hotel..." name="check"
+											class="form-control w-m"
+											style="border-radius: 5px; width: 355px;" >
+											<option value="1"
+												<c:if test="${check.check == 1}">selected="selected"</c:if>>Tuần</option>
+											<option value="2"
+												<c:if test="${check.check == 2}">selected="selected"</c:if>>Tháng</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div id="chart_div" style="width: 100%; height: 800px;"></div>
+						</c:if>
+						<div class="row ">
+								<h3 style="margin-left: 10px; text-align: center;">Lịch sử đặt phòng</h3>
+							</div>
 						<div class="datatable-dashv1-list custom-datatable-overright">
 							<c:if test="${not empty error}">
 								<div class='alert alert-danger' role='alert'>${msg}</div>
@@ -50,7 +73,7 @@
 									<div class="col-md-6" style="width: 200px;">
 										<div class="form-group">
 											<label for="firstname">Đến này</label> <input type="Date"
-												class="form-control" value="${check.checkout}"
+												class="form-control checkout" value="${check.checkout}"
 												name="checkout" style="border-radius: 5px;">
 										</div>
 									</div>
@@ -179,3 +202,110 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+	console.log(${check.checkout});
+	var sl = 1;
+	$('.w-m').on('change',function(){
+		  sl = $(this).val();
+		  google.charts.load('current', {'packages':['corechart']});
+		  if(sl == 2){
+			  $('.tk').html('Thống kê theo tháng');
+			  google.charts.setOnLoadCallback(drawChart11);
+		  }else{
+			  google.charts.setOnLoadCallback(drawChart);
+		  }
+		  
+	});
+  
+  function drawChart11() {
+	  var now = new Date();
+	  while(1){
+		  if(now.getDate() == 1) {
+			  now = new Date(now.getTime()-86400000);
+			  break;
+		  }
+		  now = new Date(now.getTime()-86400000);
+	  }
+	  console.log(now.getDate());
+	  var weekday = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+	  var weekday_totalPrice = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+	  <c:forEach items="${listBooking}" var="booking">
+  	  	var time = new Date('${booking.created_time}');
+		if(time.getTime() > now.getTime()){
+			weekday_totalPrice[time.getDate()] = weekday_totalPrice[time.getDate()] + parseInt('${booking.total_price}');
+			weekday[time.getDate()] = weekday[time.getDate()] + 1;
+	 	}
+		
+	  </c:forEach>
+	  
+	  var weekList = [
+	      ['Ngày trong tháng', 'Tổng thu nhập', 'Tổng lượt đặt']
+	  ];
+	  for(var i = 1; i<=31; i++){
+		  var weekListday = ['Ngày '+i , weekday_totalPrice[i], weekday[i]] ;
+		  weekList.push(weekListday);
+	  }
+	  var data = google.visualization.arrayToDataTable(weekList);
+	
+	  var options = {
+	      title: 'Biểu đồ đặt phòng',
+	      hAxis: {title: 'Ngày trong tháng',  titleTextStyle: {color: '#333'}},
+	      vAxis: {minValue: 0}
+	  };
+	
+	  var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+	  chart.draw(data, options);
+  }
+  
+  
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+  
+  function drawChart() {
+	  var now = new Date();
+	  while(1){
+		  if(now.getDay() == 1) {
+			  now = new Date(now.getTime()-86400000);
+			  break;
+		  }
+		  now = new Date(now.getTime()-86400000);
+	  }
+	  console.log(now.getDate());
+	  var weekday = new Array(0,0,0,0,0,0,0);
+	  var weekday_totalPrice = new Array(0,0,0,0,0,0,0);
+	  <c:forEach items="${listBooking}" var="booking">
+  	  	var time = new Date('${booking.created_time}');
+		if(time.getTime() > now.getTime()){
+			weekday_totalPrice[time.getDay()] = weekday_totalPrice[time.getDay()] + parseInt('${booking.total_price}');
+			weekday[time.getDay()] = weekday[time.getDay()] + 1;
+			console.log(weekday_totalPrice[time.getDay()])
+	 	}
+		
+	  </c:forEach>
+	  
+	  var weekList = [
+	      ['Ngày trong tuần', 'Tổng thu nhập', 'Tổng lượt đặt'],
+	      ['Thứ hai',  weekday_totalPrice[1],      weekday[1]],
+	      ['Thứ ba',  weekday_totalPrice[2],      weekday[2]],
+	      ['Thứ tư',  weekday_totalPrice[3],       weekday[3]],
+	      ['Thứ năm',  weekday_totalPrice[4],      weekday[4]],
+	      ['Thứ sáu',  weekday_totalPrice[5],       weekday[5]],
+	      ['Thứ bảy',  weekday_totalPrice[6],       weekday[6]],
+	      ['Chủ nhật',  weekday_totalPrice[0],       weekday[0]],
+	  ];
+	  var data = google.visualization.arrayToDataTable(weekList);
+	
+	  var options = {
+	      title: 'Biểu đồ đặt phòng',
+	      hAxis: {title: 'Ngày trong tuần',  titleTextStyle: {color: '#333'}},
+	      vAxis: {minValue: 0}
+	  };
+	
+	  var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+	  chart.draw(data, options);
+  }
+</script>
+

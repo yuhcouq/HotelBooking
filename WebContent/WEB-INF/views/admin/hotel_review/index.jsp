@@ -29,12 +29,14 @@
 								<thead class="text-align">
 									<tr>
 										<th class="table-id">ID</th>
-										<th class="table-name">User Name</th>
-										<th class="table-image">Hotel Name</th>
-										<th class="table-description">Title</th>
-										<th class="table-detail">Content</th>
-										<th class="table-rating">Rating</th>
-										<th class="table-function">Function</th>
+										<th class="table-name">Tên nười dùng</th>
+										<th class="table-image">Tên khách sạn</th>
+										<th class="table-detail">Nội dung</th>
+										<th class="table-rating">Đánh giá</th>
+										<c:if test="${empty checkrole}">
+											<th class="table-function">Chức năng</th>
+										</c:if>
+										<th class="table-rating">Yêu cầu xóa</th>
 									</tr>
 								</thead>
 								<tbody class="text-align">
@@ -47,25 +49,58 @@
 											<td><p>${review.id_review}</p></td>
 											<td><p>${review.firstname}${review.lastname}</p></td>
 											<td><p>${review.hotel_name}</p></td>
-											<td><p>${review.title}</p></td>
 											<td><p>${review.content}</p></td>
 											<td><p>${review.rating}</p></td>
-											<td><p>
-													<a href="${editUrl}"
-														class="btn btn-primary a-btn-slide-text"
-														style="background-color: #F5F5F5;"> <span
-														class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-														<span><strong>Chỉnh sửa</strong></span>
-													</a> <a
-														onclick="return confirm('Bạn có chắc chắn muốn xóa item này?')"
-														href="${delUrl}"
-														onclick="return confirm('Bạn có chắc chắn muốn xóa item này?')"
-														class="btn btn-primary a-btn-slide-text"
-														style="background-color: #F5F5F5;"> <span
-														class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-														<span><strong>Xóa</strong></span>
-													</a>
-												</p></td>
+											<c:if test="${empty checkrole}">
+												<td>
+													<p>
+														<%-- <a href="${editUrl}"
+															class="btn btn-primary a-btn-slide-text"
+															style="background-color: #F5F5F5;"> <span
+															class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+															<span><strong>Edit</strong></span>
+														</a>  --%>
+														<a
+															onclick="return confirm('Bạn có chắc chắn muốn xóa item này?')"
+															href="${delUrl}" class="btn btn-primary a-btn-slide-text"
+															style="background-color: #F5F5F5;"> <span
+															class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+															<span><strong>Delete</strong></span>
+														</a>
+													</p>
+												</td>
+												
+												<td>
+													<c:if test="${review.request == 1}">
+														<p><i class="fa fa-check" aria-hidden="true"></i></p>
+													</c:if>
+												</td>	
+												
+												
+											</c:if>
+											<c:if test="${not empty checkrole}">
+												<td><p>
+														<%-- <a href="${editUrl}"
+															class="btn btn-primary a-btn-slide-text"
+															style="background-color: #F5F5F5;"> <span
+															class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+															<span><strong>Chỉnh sửa</strong></span>
+														</a>  --%>
+														<c:if test="${review.request == 1}">
+															<p><i class="fa fa-check" aria-hidden="true"></i></p>
+														</c:if>
+														<c:if test="${review.request == 0}">
+															<a
+																href="${pageContext.request.contextPath}/admin/hotelreview/request/${review.id_review}"
+																class="btn btn-primary a-btn-slide-text"
+																style="background-color: #F5F5F5;"> <span
+																class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+																<span><strong>Yêu cầu xóa</strong></span>
+															</a>
+														</c:if>
+													</p>
+												</td>
+											</c:if>
 										</tr>
 									</c:forEach>
 								</tbody>

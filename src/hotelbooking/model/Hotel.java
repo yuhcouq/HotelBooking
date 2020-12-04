@@ -10,6 +10,9 @@ public class Hotel {
 	private Float rating;
 	private int city_id;
 	private String city_name;
+	private int del;
+	private Float latitude;
+	private Float longitude;
 
 	public Hotel() {
 		super();
@@ -17,7 +20,7 @@ public class Hotel {
 	}
 
 	public Hotel(int id_hotel, String hotel_name, String address, String description, String detail, String hotel_image,
-			Float rating, int city_id, String city_name) {
+			Float rating, int city_id, String city_name, int del, Float latitude, Float longitude) {
 		super();
 		this.id_hotel = id_hotel;
 		this.hotel_name = hotel_name;
@@ -28,6 +31,10 @@ public class Hotel {
 		this.rating = rating;
 		this.city_id = city_id;
 		this.city_name = city_name;
+		this.del = del;
+		this.latitude = latitude;
+		this.longitude = longitude;
+
 	}
 
 	public int getId_hotel() {
@@ -100,5 +107,29 @@ public class Hotel {
 
 	public void setCity_name(String city_name) {
 		this.city_name = city_name;
+	}
+	
+	public int getDel() {
+		return del;
+	}
+
+	public void setDel(int del) {
+		this.del = del;
+	}
+	
+	public Float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Float latitude) {
+		this.latitude = latitude;
+	}
+	
+	public Float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Float longitude) {
+		this.longitude = longitude;
 	}
 }

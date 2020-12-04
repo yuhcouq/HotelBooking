@@ -118,18 +118,8 @@
 					${defines.formatNumber(tongtien)} </span><u>VND</u></span>
 		</p>
 		<hr>
-		<form>
-			<div>
-				<span style="margin-left: 10px;">. Thanh toán Sau khi nhận
-					phòng</span><br />
-				<p class="">
-					<a href="${pageContext.request.contextPath}/public/booking/paycomplete"
-						class="btn btn-primary"
-						style="background-color: #1CC3B2; border: 1px solid #1CC3B2; margin-left: 20px;">Đặt phòng >></a>
-				</p>
-			</div>
-		</form>
-		<%-- <c:choose>
+		
+		 <c:choose>
 			<c:when test="${prepayment != 0}">
 				<form>
 					<p class="d-flex total-price">
@@ -159,7 +149,7 @@
 					</div>
 				</form>
 			</c:otherwise>
-		</c:choose> --%>
+		</c:choose> 
 	</div>
 </div>
 <section class="ftco-section" style="margin-top: 100px;">

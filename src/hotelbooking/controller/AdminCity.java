@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import hotelbooking.constant.Defines;
 import hotelbooking.dao.CityDao;
 import hotelbooking.model.City;
+import hotelbooking.model.User;
 
 @Controller
 @RequestMapping("/admin/city")
@@ -35,18 +36,22 @@ public class AdminCity {
 	}
 	
 	@RequestMapping("/index")
-	public String index(ModelMap model) {
-		model.addAttribute("listCities", cityDao.getListCities());
-		return "admin.city.index";
+	public String index(ModelMap model, HttpSession session) {
+		User userAdmin = (User) session.getAttribute("userAdmin");
+		if(userAdmin.getRole_id()==1) {
+			model.addAttribute("listCities", cityDao.getListCities());
+			return "admin.city.index";
+		}
+		return "redirect:/admin/index";
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String add(ModelMap model) {
+	public String add(ModelMap model, HttpSession session) {
 		return "admin.city.add";
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String add(@ModelAttribute("city") City city, RedirectAttributes ra) {
+	public String add(@ModelAttribute("city") City city, RedirectAttributes ra, HttpSession session) {
 		if (cityDao.addCity(city) > 0) {
 			ra.addFlashAttribute("success", "Thêm mới thành phố thành công!");
 		} else {

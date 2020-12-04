@@ -21,6 +21,7 @@ public class User {
 	private Double latitude;
 	private Double longitude;
 	private String note;
+	private int del;
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -28,7 +29,7 @@ public class User {
 	public User(int id_user, int role_id, int hotel_id, String hotel_name, String username, String password,
 			String avatar, String firstname, String lastname, String birthday, String city, String address,
 			String phone, int gender, String email, String createdAt, String updatedAt, Double latitude,
-			Double longitude, String note) {
+			Double longitude, String note, int del) {
 		super();
 		this.id_user = id_user;
 		this.role_id = role_id;
@@ -50,6 +51,7 @@ public class User {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.note = note;
+		this.del = del;
 	}
 	public int getId_user() {
 		return id_user;
@@ -63,6 +65,14 @@ public class User {
 	public void setRole_id(int role_id) {
 		this.role_id = role_id;
 	}
+	
+	public int getDel() {
+		return del;
+	}
+	public void setDel(int del) {
+		this.del = del;
+	}
+	
 	public int getHotel_id() {
 		return hotel_id;
 	}

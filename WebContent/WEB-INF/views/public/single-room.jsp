@@ -364,7 +364,7 @@
 				<div class="section-heading text-center wow fadeInUp"
 					data-wow-delay="100ms">
 					<h6></h6>
-					<h2>Khách sạn liên quan</h2>
+					<h2>Phòng liên quan</h2>
 				</div>
 			</div>
 		</div>

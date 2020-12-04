@@ -4,17 +4,19 @@ public class City {
 	private int id_city;
 	private String city_name;
 	private String country;
+	private int del;
 	
 	public City() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public City(int id_city, String city_name, String country) {
+	public City(int id_city, String city_name, String country, int del) {
 		super();
 		this.id_city = id_city;
 		this.city_name = city_name;
 		this.country = country;
+		this.del = del;
 	}
 
 	public int getId_city() {
@@ -39,5 +41,13 @@ public class City {
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+	
+	public int getDel() {
+		return del;
+	}
+
+	public void setDel(int del) {
+		this.del = del;
 	}
 }

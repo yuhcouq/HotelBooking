@@ -11,23 +11,82 @@ import hotelbooking.constant.Defines;
 import hotelbooking.model.Room;
 import hotelbooking.model.RoomImage;
 import hotelbooking.model.Hotel;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 @Repository
 public class RoomDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	public List<Room> getListRooms() {
-		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id ORDER BY id_room DESC";
+		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id WHERE r.del = 0 ORDER BY r.id_room DESC";
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
 	}
-
+	
+	public List<Room> getListRoomAlls() {
+		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id ORDER BY r.id_room DESC";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
+	public List<Room> getListRoomALLs() {
+		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id ORDER BY r.id_room DESC";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
+	public int getCountListRoomAlls() {
+		String sql = "SELECT COUNT(*) FROM room";
+		return jdbcTemplate.queryForObject(sql, Integer.class);
+	}
+	
+	public int getCountListRooms() {
+		String sql = "SELECT COUNT(*) FROM room WHERE del = 0";
+		return jdbcTemplate.queryForObject(sql, Integer.class);
+	}
+	
+	public List<Room> getListRoom10s() {
+		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id WHERE r.del = 0 ORDER BY r.rating DESC LIMIT 10";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
+	public List<Room> getListRoomForUserRecom10s(String id, int user_id) {
+		if(id == "") {
+			id = "-1";
+		}
+		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id  WHERE r.del = 0 AND r.id_room NOT IN (SELECT room_id FROM booking WHERE user_id = ? GROUP BY room_id) ORDER BY FIELD(r.id_room,"+id+") DESC limit 10";
+		return jdbcTemplate.query(sql, new Object[] { user_id }, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
+	public List<Room> getListRoomRecom10s(String id) {
+		if(id == "") {
+			id = "-1";
+		}
+		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id WHERE r.id_room IN ("+id+") AND r.del = 0 ORDER BY rating DESC LIMIT 10";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
+	
+	public List<Room> getListRoomcreate10s() {
+		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id WHERE r.del = 0 ORDER BY r.createdAT DESC LIMIT 6";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
+	public List<Room> getListRoomHot10s(Date date) {
+		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id INNER JOIN booking b ON b.room_id = r.id_room WHERE b.created_time >= ? AND r.del = 0 GROUP BY b.room_id ORDER BY COUNT(b.room_id) DESC LIMIT 10";
+		return jdbcTemplate.query(sql, new Object[] { date }, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
 	public List<Room> getListRoomsLimit(int offset) {
-		String sql = "SELECT r.*,h.hotel_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel ORDER BY id_hotel DESC LIMIT ?,?";
+		String sql = "SELECT r.*,h.hotel_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel WHERE r.del = 0 ORDER BY rating DESC LIMIT ?,?";
 		return jdbcTemplate.query(sql, new Object[] { offset, Defines.ROW_COUNT_PUBLIC },
 				new BeanPropertyRowMapper<Room>(Room.class));
 	}
+	public List<Room> getListRoomsHotelLimit(int offset, int id) {
+		String sql = "SELECT r.*,h.hotel_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel WHERE r.hotel_id = ? AND r.del = 0 ORDER BY rating DESC LIMIT ?,?";
+		return jdbcTemplate.query(sql, new Object[] { id,offset, Defines.ROW_COUNT_PUBLIC },
+				new BeanPropertyRowMapper<Room>(Room.class));
+	}
 	public int addRoom(Room room,int id_hotel) {
-		String sql = "INSERT INTO room(hotel_id, name, room_number, adult_number, children_number, bed_number, status, rating, price, prepayment, image, city_id, detail, description, acreage, service, CreatedAT) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO room(hotel_id, name, room_number, adult_number, children_number, bed_number, status, rating, price, prepayment, image, city_id, detail, description, acreage, service, CreatedAT, del) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0)";
 		String sql2 = "SELECT city_id FROM hotel WHERE id_hotel = ?";
 		List<Hotel> hotel = jdbcTemplate.query(sql2, new Object[] { id_hotel }, new BeanPropertyRowMapper<Hotel>(Hotel.class));
 		for (Hotel s : hotel) {
@@ -41,12 +100,12 @@ public class RoomDao {
 	}
 
 	public Room getRoom(int id_room) {
-		String sql = "SELECT r.*, h.hotel_name, h.hotel_image, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id WHERE id_room = ?";
+		String sql = "SELECT r.*, h.hotel_name, h.hotel_image, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id WHERE id_room = ? AND r.del = 0";
 		return jdbcTemplate.queryForObject(sql, new Object[] { id_room }, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public int editRoom(Room room) {
-		String sql = "UPDATE room SET name = ?, room_number = ?, adult_number = ?, children_number = ?, bed_number = ?, price = ?, prepayment = ?, image = ?, detail = ?, description = ?, acreage = ?, service = ?, UpdatedAT = ? WHERE id_room = ? ";
+		String sql = "UPDATE room SET name = ?, room_number = ?, adult_number = ?, children_number = ?, bed_number = ?, price = ?, prepayment = ?, image = ?, detail = ?, description = ?, acreage = ?, service = ?, UpdatedAT = ? WHERE id_room = ? AND del = 0 ";
 		return jdbcTemplate.update(sql,
 				new Object[] { room.getName(), room.getRoom_number(), room.getAdult_number(), room.getChildren_number(),
 						room.getBed_number(), room.getPrice(), room.getPrepayment(), room.getImage(), room.getDetail(),
@@ -55,22 +114,22 @@ public class RoomDao {
 	}
 
 	public int delRoom(int id_room) {
-		String sql = "DELETE FROM room WHERE id_room = ?";
+		String sql = "UPDATE room SET del = 1 WHERE id_room = ?";
 		return jdbcTemplate.update(sql, new Object[] { id_room });
 	}
 
 	public Room getRoomTop1(int id_hotel) {
-		String sql = "SELECT * FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel WHERE id_hotel = ? ORDER BY r.rating DESC LIMIT 1";
+		String sql = "SELECT * FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel WHERE id_hotel = ? AND r.del = 0 ORDER BY r.rating DESC LIMIT 1";
 		return jdbcTemplate.queryForObject(sql, new Object[] { id_hotel }, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public Room getRoomTop10(int id_hotel) {
-		String sql = "SELECT * FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel INNER JOIN city c ON h.city_id = c.id_city WHERE hotel_id = ? ORDER BY r.rating DESC LIMIT 1";
+		String sql = "SELECT * FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel INNER JOIN city c ON h.city_id = c.id_city WHERE hotel_id = ? AND r.del = 0 ORDER BY r.rating DESC LIMIT 1";
 		return jdbcTemplate.queryForObject(sql, new Object[] { id_hotel }, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public Room getRoomNews(Room room) {
-		String sql = "SELECT * FROM room r WHERE hotel_id = ? AND room_number = ? ORDER BY r.id_room DESC LIMIT 1";
+		String sql = "SELECT * FROM room r WHERE hotel_id = ? AND room_number = ? AND r.del = 0 ORDER BY r.id_room DESC LIMIT 1";
 		return jdbcTemplate.queryForObject(sql, new Object[] { room.getHotel_id(), room.getRoom_number() },
 				new BeanPropertyRowMapper<Room>(Room.class));
 	}
@@ -81,7 +140,7 @@ public class RoomDao {
 	}
 
 	public List<Room> getListRooms(int id_hotel) {
-		String sql = "SELECT r.* FROM room AS r WHERE hotel_id = ?";
+		String sql = "SELECT r.* FROM room AS r WHERE hotel_id = ? AND r.del = 0";
 		return jdbcTemplate.query(sql, new Object[] { id_hotel }, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
@@ -101,7 +160,7 @@ public class RoomDao {
 	}
 
 	public List<Room> getRooms() {
-		String sql = "SELECT r.*, hotel_name, city_name FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id";
+		String sql = "SELECT r.*, hotel_name, city_name FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id WHERE r.del = 0";
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
@@ -135,59 +194,59 @@ public class RoomDao {
 	}
 
 	public List<Room> search(String hotel_name, int offset) {
-		String sql = "SELECT r.*,h.hotel_name FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel WHERE h.hotel_name LIKE ? ORDER BY id_room DESC LIMIT ?,?";
+		String sql = "SELECT r.*,h.hotel_name FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel WHERE h.hotel_name LIKE ? AND r.del = 0 ORDER BY id_room DESC LIMIT ?,?";
 		return jdbcTemplate.query(sql, new Object[] { hotel_name, offset, Defines.ROW_COUNT_PUBLIC },
 				new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public int getCountSearch(String hotel_name) {
-		String sql = "SELECT COUNT(*) FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel WHERE h.hotel_name LIKE ?";
+		String sql = "SELECT COUNT(*) FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel WHERE r.del = 0 AND h.hotel_name LIKE ?";
 		return jdbcTemplate.queryForObject(sql, new Object[] { hotel_name }, Integer.class);
 	}
 
 	public int getCountRooms() {
-		String sql = "SELECT COUNT(*) FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel";
+		String sql = "SELECT COUNT(*) FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel WHERE r.del = 0";
 		return jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 
 	public List<Room> getListRooms(int id_hotel, int offset) {
-		String sql = "SELECT r.*,h.hotel_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel WHERE r.hotel_id = ? ORDER BY id_hotel DESC LIMIT ?,?";
+		String sql = "SELECT r.*,h.hotel_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel WHERE r.hotel_id = ? AND r.del = 0 ORDER BY id_hotel DESC LIMIT ?,?";
 		return jdbcTemplate.query(sql, new Object[] { id_hotel, offset, Defines.ROW_COUNT_PUBLIC },
 				new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public int getCountRoomsID(int id_hotel) {
-		String sql = "SELECT COUNT(*) FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel WHERE r.hotel_id = ?";
+		String sql = "SELECT COUNT(*) FROM room r INNER JOIN hotel h ON r.hotel_id = h.id_hotel WHERE r.hotel_id = ? AND r.del = 0";
 		return jdbcTemplate.queryForObject(sql, new Object[] { id_hotel }, Integer.class);
 	}
 
 	public List<Room> getListRoomsMoveData(String date) {
-		String sql = "SELECT r.*,h.hotel_name,h.city_id FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel WHERE DAY(CreatedAT) = DAY(?) OR DAY(UpdatedAT) = DAY(?)";
+		String sql = "SELECT r.*,h.hotel_name,h.city_id FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel WHERE r.del = 0 AND (DAY(CreatedAT) = DAY(?) OR DAY(UpdatedAT) = DAY(?))";
 		return jdbcTemplate.query(sql, new Object[] { date, date }, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public List<Room> getAllRoomsOfHotel(int hotel_id) {
-		String sql = "SELECT r.*,h.hotel_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel WHERE r.hotel_id = ? ORDER BY id_room DESC";
+		String sql = "SELECT r.*,h.hotel_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel WHERE r.hotel_id = ? AND r.del = 0 ORDER BY id_room DESC";
 		return jdbcTemplate.query(sql, new Object[] { hotel_id }, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public List<Room> getRoomsAdd(int limit) {
-		String sql = "SELECT * FROM room ORDER BY RAND() LIMIT ?";
+		String sql = "SELECT * FROM room WHERE del = 0 ORDER BY RAND() LIMIT ?";
 		return jdbcTemplate.query(sql, new Object[] { limit }, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public List<Room> getRoomsTop3() {
-		String sql = "SELECT * FROM room ORDER BY RAND() LIMIT 3";
+		String sql = "SELECT * FROM room WHERE del = 0 ORDER BY RAND() LIMIT 3";
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public List<Room> getRoomsTop9() {
-		String sql = "SELECT * FROM room ORDER BY RAND() LIMIT 9";
+		String sql = "SELECT * FROM room WHERE del = 0 ORDER BY RAND() LIMIT 9";
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 
 	public int updateRating(Room room) {
-		String sql = "UPDATE room SET rating = ? WHERE id_room = ? ";
+		String sql = "UPDATE room SET rating = ? WHERE id_room = ? AND del = 0";
 		return jdbcTemplate.update(sql, new Object[] { room.getRating(), room.getId_room() });
 	}
 

@@ -45,7 +45,7 @@
 						</div>
 						<!-- Room Content -->
 						<div class="room-content">
-							<h2>Room View Sea</h2>
+							<h2>${room.name}</h2>
 							<h4>
 								${defines.formatNumber(room.price)} <span>/ Day</span>
 							</h4>

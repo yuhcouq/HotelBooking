@@ -11,6 +11,50 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script  type="text/javascript">
+	$(window).on('click',function(){
+		$(".list-hotel").hide();
+	});
+	
+	$(function(){
+		<c:forEach items="${listRoomTopRe10}" var="room">
+			console.log(${room.id_room});
+		</c:forEach>
+		
+		$("#searchFormInput").on('keyup',function(){
+			$(".list-hotel").html('');
+			var value = $(this).val().toUpperCase();
+			$.ajax({
+		        url : "${pageContext.request.contextPath }/public/listhotel", 
+		        type : "GET", 
+		        dataType:"json", 
+		        success : function (result){
+		        	console.log(result);
+					if(value!=''){
+						$.each(result,function(i,val){
+							if(val.hotel_name.toUpperCase().indexOf(value)!=-1){
+								var t = '<li class="li-hotel"><a class="hotel" href="#">'+val.hotel_name+'</a></li>';
+								$(".list-hotel").append(t);
+							} 
+						});
+						$(".hotel").on("click",function(){
+							$("#searchFormInput").val($(this).html());
+						});
+						$(".list-hotel").show();
+					}
+		        }
+		    });
+			
+		});
+	 
+	});
+</script>
+
 <!-- Title -->
 <title>Roberto - Hotel &amp; Resort HTML Template</title>
 
@@ -33,6 +77,16 @@
 	padding: 90px 70px 50px 70px;
 	background: rgba(40, 57, 101, .9);
 }
+.list-hotel::-webkit-scrollbar { 
+    display: none; 
+}
+.li-hotel:hover{
+	background-color: #afb4bf;
+	
+}
+.hotel{
+	font-size: 14px;
+}
 </style>
 </head>
 <body>
@@ -48,16 +102,29 @@
 		<div class="search-form d-flex align-items-center">
 			<div class="container">
 				<form action="${pageContext.request.contextPath }/public/search"
-					method="post">
-					<input type="search" name="search" id="searchFormInput"
-						placeholder="Tên khách sạn . . .">
+					method="post" autocomplete="off">
+					<div style="display:block ">
+						<div style="margin-bottom:0px">
+							<input type="search" name="search" id="searchFormInput"
+							placeholder="Tìm theo khách sạn . . .">
+						</div>
+						
+											</div>
+					
 					<button type="submit">
 						<i class="icon_search"></i>
 					</button>
 				</form>
+				<div>
+					<ul class="list-hotel" style="border-radius:3%; width:auto; max-height: 200px; background-color:#f8f9fa; margin-top:0px; overflow: scroll;position: absolute;z-index: 2000000 ">
+							      
+			    	</ul>
+				</div>
+				
 			</div>
 		</div>
-
+		
+		
 		<!-- Top Header Area Start -->
 		<div class="top-header-area">
 			<div class="container">
@@ -129,7 +196,7 @@
 											</c:forEach>
 										</ul></li> --%>
 									<li><a
-										href="${pageContext.request.contextPath }/public/rooms">Rooms</a></li>
+										href="${pageContext.request.contextPath }/public/rooms/-1">Rooms</a></li>
 									<li><a href="${pageContext.request.contextPath }/public/contact">Contact</a></li>
 									<c:choose>
 										<c:when test="${not empty userPublic}">
@@ -138,8 +205,10 @@
 													<li><a
 														href="${pageContext.request.contextPath }/public/my-booking/${userPublic.id_user}">-
 															My booking </a><a
+														href="${pageContext.request.contextPath }/public/my-review/${userPublic.id_user}">-
+															My review </a><a
 														href="${pageContext.request.contextPath }/public/my-info">-
-															My info </a> <a
+															 My info</a><a
 														href="${pageContext.request.contextPath }/public/logout">-
 															Logout </a></li>
 												</ul></li>

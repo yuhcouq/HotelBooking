@@ -7,9 +7,11 @@ public class RoomReview {
 	private int hotel_id;
 	private String content;
 	private Float rating;
+	private int request;
 	private int room_number;
 	private String firstname;
 	private String lastname;
+	private String name;
 	private String hotel_name;
 	private String create_time;
 	private String avatar;
@@ -19,8 +21,8 @@ public class RoomReview {
 		// TODO Auto-generated constructor stub
 	}
 
-	public RoomReview(int id_review, int user_id, int room_id, int hotel_id, String content, Float rating,
-			int room_number, String firstname, String lastname, String hotel_name, String create_time, String avatar) {
+	public RoomReview(int id_review, int user_id, int room_id, int hotel_id, String content, Float rating, int request,
+			int room_number, String firstname, String lastname,String name, String hotel_name, String create_time, String avatar) {
 		super();
 		this.id_review = id_review;
 		this.user_id = user_id;
@@ -28,10 +30,12 @@ public class RoomReview {
 		this.hotel_id = hotel_id;
 		this.content = content;
 		this.rating = rating;
+		this.request = request;
 		this.room_number = room_number;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.hotel_name = hotel_name;
+		this.name = name;
 		this.create_time = create_time;
 		this.avatar = avatar;
 	}
@@ -83,6 +87,14 @@ public class RoomReview {
 	public void setRating(Float rating) {
 		this.rating = rating;
 	}
+	
+	public int getRequest() {
+		return request;
+	}
+
+	public void setRequest(int request) {
+		this.request = request;
+	}
 
 	public int getRoom_number() {
 		return room_number;
@@ -114,6 +126,14 @@ public class RoomReview {
 
 	public void setHotel_name(String hotel_name) {
 		this.hotel_name = hotel_name;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getCreate_time() {

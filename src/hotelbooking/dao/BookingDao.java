@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import hotelbooking.model.Booking;
 import hotelbooking.model.Check;
+import hotelbooking.model.Room;
 import hotelbooking.model.User;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Repository
 public class BookingDao {
@@ -51,6 +54,83 @@ public class BookingDao {
 		String sql = "SELECT COUNT(*) FROM booking WHERE code = ?";
 		return jdbcTemplate.queryForObject(sql, new Object[] { code }, Integer.class);
 	}
+	
+	public List<Room> getListRoomTop10s(String user_id) {
+		String sql = "SELECT r.* FROM booking AS b INNER JOIN room AS r On b.room_id = r.id_room WHERE user_id IN ("+user_id+") GROUP BY b.room_id ";
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
+	public int CheckUserRoom(int id_room, int id_user) {
+		String sql = "SELECT COUNT(*) FROM booking WHERE room_id = ? AND user_id = ?";
+		int rq = jdbcTemplate.queryForObject(sql, new Object[] { id_room,id_user }, Integer.class);
+		if(rq > 0) {
+			return 1;
+		}
+		return 0;
+	}
+	
+	public int CheckUserHotel(int id_hotel, int id_user) {
+		String sql = "SELECT COUNT(*) FROM booking WHERE hotel_id = ? AND user_id = ?";
+		int rq = jdbcTemplate.queryForObject(sql, new Object[] { id_hotel,id_user }, Integer.class);
+		if(rq > 0) {
+			return 1;
+		}
+		return 0;
+	}
+	
+	public int CountUserHotel(int id_hotel) {
+		String sql = "SELECT COUNT(DISTINCT user_id) FROM booking WHERE hotel_id = ?";
+		int rq = jdbcTemplate.queryForObject(sql, new Object[] { id_hotel}, Integer.class);
+		return rq;
+	}
+	
+	public int CountUserRoom(int id_room) {
+		String sql = "SELECT COUNT(DISTINCT user_id) FROM booking WHERE room_id = ?";
+		int rq = jdbcTemplate.queryForObject(sql, new Object[] { id_room}, Integer.class);
+		return rq;
+	}
+	
+	public int CountRoomUser(int id_user) {
+		String sql = "SELECT COUNT(DISTINCT room_id) FROM booking WHERE user_id = ?";
+		int rq = jdbcTemplate.queryForObject(sql, new Object[] { id_user}, Integer.class);
+		return rq;
+	}
+	
+	public int CheckHotel(int id_hotel) {
+		String sql = "SELECT COUNT(*) FROM booking WHERE hotel_id = ?";
+		int rq = jdbcTemplate.queryForObject(sql, new Object[] { id_hotel}, Integer.class);
+		if(rq > 0) {
+			return 1;
+		}
+		return 0;
+	}
+	
+	public int CheckRoom(int id_room) {
+		String sql = "SELECT COUNT(*) FROM booking WHERE room_id = ?";
+		int rq = jdbcTemplate.queryForObject(sql, new Object[] { id_room}, Integer.class);
+		if(rq > 0) {
+			return 1;
+		}
+		return 0;
+	}
+	
+	public int CheckUser(int id_user) {
+		String sql = "SELECT COUNT(*) FROM booking WHERE user_id = ?";
+		int rq = jdbcTemplate.queryForObject(sql, new Object[] { id_user}, Integer.class);
+		if(rq > 0) {
+			return 1;
+		}
+		return 0;
+	}
+	
+	public int CheckDate(String star, String end, int id_room) {
+		String sql = "SELECT COUNT(*) FROM booking WHERE room_id = ? AND (checkin BETWEEN ? AND ? OR checkout BETWEEN ? AND ? OR (checkin < ? AND checkout > ?))";
+		int rq = jdbcTemplate.queryForObject(sql, new Object[] { id_room,star,end,star,end,star,end}, Integer.class);
+		if(rq > 0) {
+			return 1;
+		}
+		return 0;
+	}
 
 	public List<Booking> getAllBooking(int code) {
 		String sql = "SELECT * FROM booking WHERE code = ?";
@@ -75,6 +155,12 @@ public class BookingDao {
 	public Booking getCusromerBooking(int code) {
 		String sql = "SELECt * FROM booking WHERE code = ?";
 		return jdbcTemplate.queryForObject(sql, new Object[] { code },
+				new BeanPropertyRowMapper<Booking>(Booking.class));
+	}
+	
+	public List<Booking> getUserBooking(String id_user,int id) {
+		String sql = "SELECT * FROM `booking` WHERE room_id NOT IN (SELECT room_id FROM booking WHERE user_id = ? GROUP BY room_id) GROUP BY room_id ORDER BY FIELD(user_id,"+id_user+") DESC limit 10";
+		return jdbcTemplate.query(sql, new Object[] { id },
 				new BeanPropertyRowMapper<Booking>(Booking.class));
 	}
 
@@ -108,7 +194,24 @@ public class BookingDao {
 		String sql = "SELECT b.* FROM booking b  WHERE status != 0";
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Booking>(Booking.class));
 	}
-
+	
+//	public List<Booking> getAllBookingWeek() {
+//		String sql = "SELECT b.* FROM booking b  WHERE status != 0";
+//		List<Booking> booking = jdbcTemplate.query(sql, new BeanPropertyRowMapper<Booking>(Booking.class));
+//		List<Booking> bkw;
+//		for(Booking bk : booking){
+//			Timestamptime = Timestamp timestamp = new Timestamp(now.getTime());
+//			if()
+//		}
+//		 
+//		 // lấy ngày giờ hiện tại
+//		Date now = new Date();
+//		Timestamp timestamp = new Timestamp(now.getTime());
+//		Date last = new Date(timestamp.getTime());
+//		
+//		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Booking>(Booking.class));
+//	}
+	
 	public List<Booking> getAllBookingOfHotel(int hotel_id) {
 		String sql = "SELECT b.* FROM booking b WHERE status != 0 AND hotel_id = ?";
 		return jdbcTemplate.query(sql, new Object[] { hotel_id }, new BeanPropertyRowMapper<Booking>(Booking.class));
@@ -169,7 +272,7 @@ public class BookingDao {
 	}
 
 	public List<Booking> getAllMyBoooking(int id_user) {
-		String sql = "SELECT b.*, h.hotel_name, r.image, r.price FROM booking b INNER JOIN hotel h ON b.hotel_id = h.id_hotel INNER JOIN room r ON r.id_room = b.room_id  WHERE b.status != 1 AND b.user_id = ?";
+		String sql = "SELECT b.*, h.hotel_name, r.image, r.price ,r.room_number FROM booking b INNER JOIN hotel h ON b.hotel_id = h.id_hotel INNER JOIN room r ON r.id_room = b.room_id  WHERE b.status != 1 AND b.user_id = ?";
 		
 		return jdbcTemplate.query(sql, new Object[] { id_user }, new BeanPropertyRowMapper<Booking>(Booking.class));
 //		return null;

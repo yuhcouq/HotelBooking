@@ -168,23 +168,30 @@
 							</a>
 							<ul class="submenu-angle" aria-expanded="true">
 								<li><a title="Dashboard v.1"
+									href="${pageContext.request.contextPath}/admin/user/editprofile"><span
+										class="mini-sub-pro">Profile</span></a></li>
+								<li><a title="Dashboard v.1"
 									href="${pageContext.request.contextPath}/admin/hotel/index"><span
-										class="mini-sub-pro">hotel</span></a></li>
+										class="mini-sub-pro">Hotel</span></a></li>
 								<li><a title="Dashboard v.2"
 									href="${pageContext.request.contextPath}/admin/room/index"><span
 										class="mini-sub-pro">Room</span></a></li>
-								<li><a title="Dashboard v.3"
-									href="${pageContext.request.contextPath}/admin/city/index"><span
-										class="mini-sub-pro">City</span></a></li>
+								<c:if test="${userAdmin.role_id == 1}">
+									<li><a title="Dashboard v.3"
+										href="${pageContext.request.contextPath}/admin/city/index"><span
+											class="mini-sub-pro">City</span></a></li>
+								</c:if>
 								<li><a title="Widgets"
 									href="${pageContext.request.contextPath}/admin/hotelreview/index"><span
 										class="mini-sub-pro">Hotel Reviews</span></a></li>
 								<li><a title="Widgets"
 									href="${pageContext.request.contextPath}/admin/roomreview/index"><span
 										class="mini-sub-pro">Room Reviews</span></a></li>
-								<li><a title="Widgets"
-									href="${pageContext.request.contextPath}/admin/slide/index"><span
-										class="mini-sub-pro">Slide</span></a></li>
+								<c:if test="${userAdmin.role_id == 1}">
+									<li><a title="Widgets"
+										href="${pageContext.request.contextPath}/admin/slide/index"><span
+											class="mini-sub-pro">Slide</span></a></li>
+								</c:if>
 								<li><a title="Widgets"
 									href="${pageContext.request.contextPath}/admin/booking/index"><span
 										class="mini-sub-pro">Booking</span></a></li>

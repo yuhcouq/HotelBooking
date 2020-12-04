@@ -98,27 +98,27 @@ public class AdminRoom {
 		}
 
 		String service = "";
-		if (room.getWifi().equals("1")) {
+		if (room.getWifi()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
 		}
-		if (room.getTelevision().equals("1")) {
+		if (room.getTelevision()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
 		}
-		if (room.getConditioning().equals("1")) {
+		if (room.getConditioning()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
 		}
-		if (room.getDrinks().equals("1")) {
+		if (room.getDrinks()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
 		}
-		if (room.getRestaurant().equals("1")) {
+		if (room.getRestaurant()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
@@ -150,27 +150,27 @@ public class AdminRoom {
 			@RequestParam("picture") CommonsMultipartFile cmf, HttpServletRequest request, RedirectAttributes ra,
 			ModelMap model) {
 		String service = "";
-		if (room.getWifi().equals("1")) {
+		if (room.getWifi()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
 		}
-		if (room.getTelevision().equals("1")) {
+		if (room.getTelevision()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
 		}
-		if (room.getConditioning().equals("1")) {
+		if (room.getConditioning()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
 		}
-		if (room.getDrinks().equals("1")) {
+		if (room.getDrinks()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
 		}
-		if (room.getRestaurant().equals("1")) {
+		if (room.getRestaurant()!=null) {
 			service += "1,";
 		} else {
 			service += "0,";
@@ -217,25 +217,7 @@ public class AdminRoom {
 
 	@RequestMapping(value = "/del/{id_room}", method = RequestMethod.GET)
 	public String del(@PathVariable("id_room") int id_room, HttpServletRequest request, RedirectAttributes ra) {
-
-		Room room = roomDao.getRoom(id_room);
-		String fileNameOld = room.getImage();
-		String appPath = request.getServletContext().getRealPath("");
-		String dirPath = appPath + Defines.DIR_UPLOAD;
-		String filePath = dirPath + File.separator + fileNameOld;
-		File file;
-
-		file = new File(filePath);
-		file.delete();
 		if (roomDao.delRoom(id_room) > 0) {
-			List<RoomImage> listImage = roomDao.GetImages(id_room);
-			for (RoomImage roomImage : listImage) {
-				filePath = dirPath + File.separator + roomImage.getImage();
-				file = new File(filePath);
-				file.delete();
-			}
-			roomDao.deleteImages(id_room);
-			roomReviewDao.delRoomReviews(id_room);
 			ra.addFlashAttribute("success", "Xóa phòng thành công!");
 		} else {
 			ra.addFlashAttribute("error", "Hệ thống đang bảo trì, vui lòng thực hiện chức năng này sau!");

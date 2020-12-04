@@ -67,8 +67,35 @@
 										style="margin-left: 42.6%;" /> <input type="submit"
 										value="Thêm mới" class="button-success" />
 								</div>
+								<div class="form-group-inner" style="display: none;">
+									<input type="text" name="latitude" id="latitude"
+										class="form-control" placeholder="latitude"
+										style="border-radius: 5px;" value="" />
+								</div>
+								<div class="form-group-inner" style="display: none;">
+									<input type="text" name="longitude" id="longitude"
+										class="form-control" placeholder="longitude"
+										style="border-radius: 5px;" value="" />
+								</div>
 
 							</form>
+							<script>
+								window.onload = getLocation;
+								function getLocation() {
+									if (navigator.geolocation) {
+										navigator.geolocation
+												.getCurrentPosition(setPosition);
+									} else {
+										alert("Geolocation không được hỗ trợ bởi trình duyệt này.");
+									}
+								}
+
+								function setPosition(position) {
+									console.log(position.coords.latitude);
+									document.getElementById("latitude").value = position.coords.latitude;
+									document.getElementById("longitude").value = position.coords.longitude;
+								}
+							</script>
 						</div>
 					</div>
 				</div>

@@ -113,6 +113,7 @@
 		</div>
 	</div>
 	<script>
+		window.onload = getLocation;
 		function getLocation() {
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(setPosition);

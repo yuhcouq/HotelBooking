@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="/templates/taglib.jsp"%>
+
 <div class="data-table-area mg-b-15">
 	<div class="container-fluid">
 		<div class="row">
@@ -156,6 +157,7 @@
 								</div>
 							</form>
 							<script>
+							window.onload = getLocation;
 								function getLocation() {
 									if (navigator.geolocation) {
 										navigator.geolocation

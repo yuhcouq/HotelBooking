@@ -61,8 +61,8 @@ public class AdminHotel {
 			if (userAdmin.getRole_id() == 1) {
 				model.addAttribute("listHotels", hotelDao.getListHotel());
 				return "admin.hotel.index";
-			} if(userAdmin.getRole_id() == 2) {
-				if(userAdmin.getHotel_id() == -1) {
+			}else if(userAdmin.getRole_id() == 2) {
+				if(userAdmin.getHotel_id() == -1 || userAdmin.getHotel_id() == 0) {
 					return "admin.hotel.add";
 				}else {
 					model.addAttribute("hotel", hotelDao.getHotel(userAdmin.getHotel_id()));
@@ -115,8 +115,8 @@ public class AdminHotel {
 		}
 		User userAdmin = (User) session.getAttribute("userAdmin");
 		if (hotelDao.addHotel(hotel, userAdmin, userDao) > 0) {
-			List<User> listUsers = userDao.getListUsers(userAdmin.getEmail());
-			for (User user : listUsers) {
+			User user = userDao.getUser(userAdmin.getId_user());
+			if(userAdmin.getRole_id()!=1) {
 				user.setHotel_name(hotelDao.getHotel(user.getHotel_id()).getHotel_name());
 				session.setAttribute("userAdmin", user);
 			}
@@ -186,33 +186,13 @@ public class AdminHotel {
 		if (session.getAttribute("userAdmin") != null) {
 			User userAdmin = (User) session.getAttribute("userAdmin");
 			if (userAdmin.getRole_id() == 1) {
-				Hotel hotel = hotelDao.getHotel(id_hotel);
-				String fileNameOld = hotel.getHotel_image();
-				String appPath = request.getServletContext().getRealPath("");
-				String dirPath = appPath + Defines.DIR_UPLOAD;
-				String filePath = dirPath + File.separator + fileNameOld;
-				File file;
-				if (!"".equals(filePath)) {
-					file = new File(filePath);
-					file.delete();
-				}
 				if (hotelDao.delHotel(id_hotel) > 0) {
 					List<Room> listRooms = roomDao.getListRooms(id_hotel);
 					for (Room room : listRooms) {
-						filePath = dirPath + File.separator + room.getImage();
-						file = new File(filePath);
-						file.delete();
 						if (roomDao.delRoom(room.getId_room()) > 0) {
-							List<RoomImage> listImages = roomDao.GetListImages(room.getId_room());
-							for (RoomImage roomImage : listImages) {
-								filePath = dirPath + File.separator + roomImage.getImage();
-								file = new File(filePath);
-								file.delete();
-								roomDao.deleteImages(room.getId_room());
-							}
+							ra.addFlashAttribute("success", "Xóa khách sạn thành công!");
 						}
 					}
-					ra.addFlashAttribute("success", "Xóa khách sạn thành công!");
 				} else {
 					ra.addFlashAttribute("error", "Hệ thống đang bảo trì, vui lòng thực hiện chức năng này sau!");
 				}

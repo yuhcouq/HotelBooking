@@ -27,7 +27,32 @@
 								action="${pageContext.request.contextPath }/admin/user/edit/${user.id_user}"
 								method="Post" style="margin-left: 10px;"
 								enctype="multipart/form-data">
-
+								<c:if test="${user.role_id != 4}">
+									<div class="form-group-inner">
+										<label>Tên khách sạn </label>
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<div class="chosen-select-single mg-b-20">
+												<select data-placeholder="Choose a hotel..." name="hotel_id"
+													class="form-control"
+													style="border-radius: 5px; width: 700px;"
+													>
+													<c:if test="${not empty checkprofile}">
+														<option value="${hotel.id_hotel}" selected="selected">${hotel.hotel_name }</option>
+													</c:if>
+													<c:if test="${empty checkprofile || user.role_id ==1}">
+														<c:forEach items="${listHotels}" var="ht">
+															<option
+																<c:if test="${hotel.id_hotel == ht.id_hotel }">selected="selected"</c:if>
+																value="${ht.id_hotel}">${ht.hotel_name }</option>
+														</c:forEach>
+													</c:if>
+													
+												</select>
+											</div>
+										</div>
+									</div>
+								</c:if>
+								
 								<div class="form-group-inner">
 									<label>Tên tài khoản</label> <input type="text" name="username"
 										class="form-control" placeholder="Vui lòng nhập tên tài khoản"
@@ -94,6 +119,7 @@
 										class="form-control" placeholder="Vui lòng nhập địa chỉ email"
 										style="border-radius: 5px;" value="${user.email}" required />
 								</div>
+								
 								<div class="">
 									<input type="reset" value="Clear" class="button-clear"
 										style="margin-left: 43.2%;" /> <input type="submit"

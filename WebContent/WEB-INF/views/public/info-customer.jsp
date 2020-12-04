@@ -1,6 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="/templates/taglib.jsp"%>
+<head>
+<style type="text/css">
+	.nice-select.open .list{
+		height: 150px;
+	    overflow-x: hidden;
+	    overflow-y: scroll;
+	    width: 150px;
+	}
+</style>
+</head>
 <section class="ftco-section">
 	<div class="container">
 		<div class="row">
@@ -84,12 +94,25 @@
 									name="birthday">
 							</div>
 						</div>
-						<div class="col-md-6">
+						<%-- <div class="col-md-6">
 							<div class="form-group">
 								<label for="lastname">Thành phố *</label> <input type="text"
 									name="city" class="form-control"
 									placeholder="Vui lòng nhập tỉnh / thành phố của bạn"
 									required="required" value="${userPublic.city}">
+							</div>
+						</div> --%>
+						<div class="col-md-6">
+							<label>Thành phố</label>
+							<div class="chosen-select-single mg-b-20 wrapper"
+								style="width: 700px; margin-left: 15px">
+								<select data-placeholder="Choose a Country..."
+									class="chosen-select" tabindex="-1" name="city" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+									<c:forEach items="${listCities}" var="city">
+										<option value="${city.city_name }"
+											<c:if test="${userPublic.city == city.city_name }">selected="selected"</c:if>>${city.city_name }</option>
+									</c:forEach>
+								</select>
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -116,8 +139,10 @@
 								style="margin-left: 500px; border-radius: 5px; background-color: #1CC3B2; border: 1px solid #1CC3B2;" />
 						</p>
 					</div>
+					
 				</form>
 			</div>
 		</div>
 	</div>
+	
 </section>

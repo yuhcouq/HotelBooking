@@ -181,6 +181,15 @@
 
 <!-- Our Room Area Start -->
 <section class="roberto-rooms-area">
+	<div class="row">
+				<!-- Section Heading -->
+				<div class="col-12">
+					<div class="section-heading text-center wow fadeInUp"
+						data-wow-delay="100ms">
+						<h2>Room is suggested for you</h2>
+					</div>
+				</div>
+			</div>
 	<div class="rooms-slides owl-carousel">
 		<c:forEach items="${listRoomTop10}" var="room">
 			<!-- Single Room Slide -->
@@ -322,9 +331,18 @@
 <!-- Projects Area Start -->
 <section class="roberto-project-area">
 	<!-- Projects Slide -->
+	<div class="row">
+			<!-- Section Heading -->
+			<div class="col-12">
+				<div class="section-heading text-center wow fadeInUp"
+					data-wow-delay="100ms">
+					<h2>Hot Rooms</h2>
+				</div>
+			</div>
+		</div>
 	<div class="projects-slides owl-carousel">
 		<!-- Single Project Slide -->
-		<c:forEach items="${listRoomTop10}" var="room">
+		<c:forEach items="${listRoomTopHot10}" var="room">
 			<div class="single-project-slide active bg-img"
 				style="background-image: url(${pageContext.request.contextPath }/uploads/${room.image});">
 				<!-- Project Text -->
@@ -372,7 +390,7 @@
 
 		<div class="row">
 			<!-- Single Post Area -->
-			<c:forEach items="${listRoomTop3}" var="room">
+			<c:forEach items="${listRoomTopreate10}" var="room">
 				<div class="col-12 col-md-6 col-lg-4">
 					<div class="single-post-area mb-100 wow fadeInUp"
 						data-wow-delay="300ms">

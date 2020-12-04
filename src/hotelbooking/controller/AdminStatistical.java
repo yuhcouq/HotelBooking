@@ -113,6 +113,7 @@ public class AdminStatistical {
 			}
 			model.addAttribute("check", check);
 			model.addAttribute("listBooking", listBooking);
+			model.addAttribute("find", 1);
 		} else {
 			return "redirect:/admin/error403";
 		}

@@ -6,8 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,18 +25,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import hotelbooking.constant.Defines;
 import hotelbooking.dao.BookingDao;
 import hotelbooking.dao.HotelDao;
+import hotelbooking.dao.CityDao;
 import hotelbooking.dao.RoomDao;
 import hotelbooking.dao.RoomReviewDao;
+import hotelbooking.dao.HotelReviewDao;
 import hotelbooking.dao.SlideDao;
 import hotelbooking.dao.UserDao;
 import hotelbooking.model.Booking;
 import hotelbooking.model.Check;
 import hotelbooking.model.Login;
 import hotelbooking.model.Room;
+import hotelbooking.model.Hotel;
+import hotelbooking.model.City;
 import hotelbooking.model.RoomReview;
+import hotelbooking.model.HotelReview;
 import hotelbooking.model.User;
 import hotelbooking.util.StringUtil;
-
+import sun.misc.ObjectInputFilter.Status;
+import java.util.concurrent.TimeUnit;
 @Controller
 @RequestMapping("")
 public class Publicindex {
@@ -44,6 +54,9 @@ public class Publicindex {
 
 	@Autowired
 	private HotelDao hotelDao;
+	
+	@Autowired
+	private CityDao cityDao;
 
 	@Autowired
 	private RoomDao roomDao;
@@ -56,6 +69,9 @@ public class Publicindex {
 
 	@Autowired
 	private RoomReviewDao roomReviewDao;
+	
+	@Autowired
+	private HotelReviewDao hotelReviewDao;
 
 	@Autowired
 	private StringUtil stringUtil;
@@ -64,6 +80,7 @@ public class Publicindex {
 	public void addCommonsObject(ModelMap modelMap, HttpSession session, Principal principal) {
 		modelMap.addAttribute("defines", defines);
 		modelMap.addAttribute("listHotels", hotelDao.getListHotel());
+		modelMap.addAttribute("listCities", cityDao.getListCities());
 		List<Booking> listBooking = (ArrayList<Booking>) session.getAttribute("listBooking");
 		if (listBooking == null) {
 			listBooking = new ArrayList<Booking>();
@@ -73,12 +90,15 @@ public class Publicindex {
 	}
 
 	@RequestMapping(value = { "/public/index", "" })
-	public String index(ModelMap model, HttpSession session) {
+	public String index(ModelMap model, HttpSession session, HttpServletRequest request) {
 		model.addAttribute("listSlide", slideDao.getListSlideON());
 		List<Room> listRoomTop3 = roomDao.getRoomsTop3();
 		model.addAttribute("listRoomTop3", listRoomTop3);
 
 		List<Room> listRoomsRecommend = new ArrayList<Room>();
+		
+		long millis = System.currentTimeMillis();
+        Date date2 = new Date(millis-(7*86400000));
 		if (session.getAttribute("userPublic") != null) {
 //			User userPublic = (User) session.getAttribute("userPublic");
 //			List<Integer> listIdRooms = defines.GetRomsCollaborative(userPublic.getId_user());
@@ -106,14 +126,34 @@ public class Publicindex {
 //				listRoomsRecommend.addAll(listIdRoomsAdd);
 //			}
 //			model.addAttribute("listRoomTop10", listRoomsRecommend);
-			model.addAttribute("listRoomTop10", roomDao.getListRooms());
+			User userPublic = (User) session.getAttribute("userPublic");
+			String appPath = request.getServletContext().getRealPath("");
+			model.addAttribute("listRoomTop10", defines.recom(userPublic.getId_user(),appPath,10));
+//			model.addAttribute("listRoomTop10", roomDao.getListRoom10s());
+			model.addAttribute("listRoomTopreate10", roomDao.getListRoomcreate10s());
+			model.addAttribute("listRoomTopHot10", roomDao.getListRoomHot10s(date2));
 		} else {
-			model.addAttribute("listRoomTop10", roomDao.getListRooms());
+			
+			model.addAttribute("listRoomTop10", roomDao.getListRoom10s());
+			model.addAttribute("listRoomTopreate10", roomDao.getListRoomcreate10s());
+			model.addAttribute("listRoomTopHot10", roomDao.getListRoomHot10s(date2));
 		}
-
+		List<Hotel> listhotels = hotelDao.getListHotel();
+		model.addAttribute("listhotels", listhotels);
 		return "public.index.index";
 	}
 
+	@RequestMapping(value = { "/public/listhotel"}, method = RequestMethod.GET)
+	public ResponseEntity<List<Hotel>> listHotel() {
+		List<Hotel> listHotel= hotelDao.getListHotel();
+		return new ResponseEntity<>(listHotel,HttpStatus.OK);
+	}
+	@RequestMapping(value = { "/public/listcity"}, method = RequestMethod.GET)
+	public ResponseEntity<List<City>> listCity() {
+		List<City> city = cityDao.getListCities();
+		return new ResponseEntity<>(city,HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = { "/public/hotel/{id_hotel}", "/public/hotel/{id_hotel}/{page}" })
 	public String hotel(@PathVariable(value = "page", required = false) Integer page, ModelMap model,
 			@PathVariable("id_hotel") int id_hotel) {
@@ -214,7 +254,7 @@ public class Publicindex {
 						if (user.getRole_id() == 1) {
 							user.setHotel_name("ADMIN MANAGER");
 						} else {
-							if(user.getHotel_id() == -1) {
+							if(user.getHotel_id() == -1 || user.getHotel_id() == 0) {
 								user.setHotel_name("Chưa có khách sạn nào");
 							}else {
 								user.setHotel_name(hotelDao.getHotel(user.getHotel_id()).getHotel_name());
@@ -263,6 +303,7 @@ public class Publicindex {
 
 	@RequestMapping(value = "/public/my-info", method = RequestMethod.GET)
 	public String MyInfo() {
+		
 		return "public.my-info";
 	}
 
@@ -292,6 +333,15 @@ public class Publicindex {
 		List<Booking> booking = bookingDao.getAllMyBoooking(id_user);
 		model.addAttribute("listBooking", booking);
 		return "public.my-booking";
+	}
+	
+	@RequestMapping(value = "/public/my-review/{id_user}", method = RequestMethod.GET)
+	public String MyReview(@PathVariable("id_user") int id_user, ModelMap model) {
+		List<RoomReview> roomReview = roomReviewDao.getListReviewUsers(id_user);
+		List<HotelReview> hotelReview = hotelReviewDao.getListReviewOfUsers(id_user);
+		model.addAttribute("listHotelReview", hotelReview);
+		model.addAttribute("listRoomReview", roomReview);
+		return "public.my-review";
 	}
 
 	@RequestMapping(value = "/public/reviews/{id_room}/{id_booking}", method = RequestMethod.GET)
@@ -323,5 +373,70 @@ public class Publicindex {
 			ra.addFlashAttribute("error", "Đánh giá chất lượng thất bại, vui lòng quay lại sau!");
 		}
 		return "redirect:/public/my-booking/" + id_user;
+	}
+	
+	@RequestMapping(value = "/public/reviews/{id_hotel}/{id_user}", method = RequestMethod.POST)
+	public String ReviewHotels(@PathVariable("id_hotel") int id_hotel, @PathVariable("id_user") int id_user, @ModelAttribute("hotelReviews") HotelReview hotelReview,
+			ModelMap model, RedirectAttributes ra) {
+		hotelReview.setCreate_time(defines.getDateDay());
+		if(hotelReviewDao.getCheckReviewOfUsers(id_user)==0) {
+			if (hotelReviewDao.InsertReview(hotelReview, id_hotel, id_user) > 0) {
+				Hotel hotel = hotelDao.getHotel(id_hotel);
+				if (hotel.getRating() != 0) {
+					hotel.setRating((hotel.getRating() + hotelReview.getRating()) / 2);
+				} else {
+					hotel.setRating(hotelReview.getRating());
+				}
+				hotelDao.updateRating(hotel);
+				ra.addFlashAttribute("success", "Đánh giá chất lượng thành công!");
+			} else {
+				ra.addFlashAttribute("error", "Đánh giá chất lượng thất bại, vui lòng quay lại sau!");
+			}
+		}else {
+			ra.addFlashAttribute("error", "Bạn đã đánh giá khách sạn này rồi!");
+		}
+		return "redirect:/public/single_hotel/" + id_hotel;
+	}
+	
+	@RequestMapping(value = "/public/recomhotel", method = RequestMethod.GET)
+	public String RecomHotel(HttpServletRequest request) {
+		String appPath = request.getServletContext().getRealPath("");
+		defines.recomhotelcsv(appPath);
+		return "redirect:/public/index";
+	}
+	
+	@RequestMapping(value = "/public/recomroom", method = RequestMethod.GET)
+	public String RecomRoom(HttpServletRequest request) {
+		String appPath = request.getServletContext().getRealPath("");
+		defines.recomroomcsv(appPath);
+		return "redirect:/public/index";
+	}
+	
+	@RequestMapping(value = "/public/recomuser", method = RequestMethod.GET)
+	public String RecomUser(HttpServletRequest request) {
+		String appPath = request.getServletContext().getRealPath("");
+		defines.recomusercsv(appPath);
+		return "redirect:/public/index";
+	}
+	
+	@RequestMapping(value = "/public/recomcontenthotel", method = RequestMethod.GET)
+	public String RecomContentHotel(HttpServletRequest request) {
+		String appPath = request.getServletContext().getRealPath("");
+		defines.recomhotelcontentcsv(appPath);
+		return "redirect:/public/index";
+	}
+	
+	@RequestMapping(value = "/public/recomcontentroom", method = RequestMethod.GET)
+	public String RecomContentRoom(HttpServletRequest request) {
+		String appPath = request.getServletContext().getRealPath("");
+		defines.recomroomcontentcsv(appPath);
+		return "redirect:/public/index";
+	}
+	
+	@RequestMapping(value = "/public/recomcontentuser", method = RequestMethod.GET)
+	public String RecomContentUser(HttpServletRequest request) {
+		String appPath = request.getServletContext().getRealPath("");
+		defines.recomusercontentcsv(appPath);
+		return "redirect:/public/index";
 	}
 }

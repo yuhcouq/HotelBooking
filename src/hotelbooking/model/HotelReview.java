@@ -7,17 +7,21 @@ public class HotelReview {
 	private String title;
 	private String content;
 	private float rating;
+	private int request;
 	private String hotel_name;
 	private String firstname;
 	private String lastname;
+	private String create_time;
+	private String update_time;
+	private String avatar;
 	
 	public HotelReview() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public HotelReview(int id_review, int hotel_id, int user_id, String title, String content, float rating,
-			String hotel_name, String firstname, String lastname) {
+	public HotelReview(int id_review, int hotel_id, int user_id, String title, String content, float rating, float request,
+			String hotel_name, String firstname, String lastname, String avatar) {
 		super();
 		this.id_review = id_review;
 		this.hotel_id = hotel_id;
@@ -25,9 +29,11 @@ public class HotelReview {
 		this.title = title;
 		this.content = content;
 		this.rating = rating;
+		this.rating = request;
 		this.hotel_name = hotel_name;
 		this.firstname = firstname;
 		this.lastname = lastname;
+		this.avatar = avatar;
 	}
 
 	public int getId_review() {
@@ -77,6 +83,14 @@ public class HotelReview {
 	public void setRating(float rating) {
 		this.rating = rating;
 	}
+	
+	public int getRequest() {
+		return request;
+	}
+
+	public void setRequest(int request) {
+		this.request = request;
+	}
 
 	public String getHotel_name() {
 		return hotel_name;
@@ -100,5 +114,21 @@ public class HotelReview {
 
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
+	}
+	
+	public void setCreate_time(String create_time) {
+		this.create_time = create_time;
+	}
+	
+	public String getCreate_time() {
+		return create_time;
+	}
+	
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+	
+	public String getAvatar() {
+		return avatar;
 	}
 }

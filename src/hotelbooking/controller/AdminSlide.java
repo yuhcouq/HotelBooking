@@ -22,6 +22,7 @@ import hotelbooking.constant.Defines;
 import hotelbooking.dao.SlideDao;
 import hotelbooking.model.Hotel;
 import hotelbooking.model.Slide;
+import hotelbooking.model.User;
 
 @Controller
 @RequestMapping("/admin/slide")
@@ -38,9 +39,14 @@ public class AdminSlide {
 	}
 	
 	@RequestMapping("/index")
-	public String index(ModelMap model) {
-		model.addAttribute("listSlide", slideDao.getListSlide());
-		return "admin.slide.index";
+	public String index(ModelMap model, HttpSession session, RedirectAttributes ra) {
+		User userAdmin = (User) session.getAttribute("userAdmin");
+		if(userAdmin.getRole_id() == 1) {
+			model.addAttribute("listSlide", slideDao.getListSlide());
+			return "admin.slide.index";
+		}
+		ra.addFlashAttribute("error", "Bạn không thể thực hiện chức năng này!");
+		return "redirect:/admin/index";
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)

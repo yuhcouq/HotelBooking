@@ -17,6 +17,7 @@ import hotelbooking.constant.Defines;
 import hotelbooking.dao.HotelDao;
 import hotelbooking.dao.RoomDao;
 import hotelbooking.dao.UserDao;
+import hotelbooking.dao.CityDao;
 import hotelbooking.model.Booking;
 import hotelbooking.model.Check;
 import hotelbooking.model.Room;
@@ -35,6 +36,9 @@ public class PublicRoom {
 
 	@Autowired
 	private HotelDao hotelDao;
+	
+	@Autowired
+	private CityDao cityDao;
 	
 	private UserDao userDao;
 
@@ -103,14 +107,50 @@ public class PublicRoom {
 		return "public.hotels";
 		
 	}
+	
+	@RequestMapping(value = { "/hotelcitys/{id}", "/hotelcitys/{page}/{id}" })
+	public String hotelcity(@PathVariable(value = "page", required = false) Integer page,@PathVariable("id") int id, ModelMap model,
+			HttpSession session) {
+		
+		if (page == null) {
+			page = 1;
+		}
+		int totalHotels = hotelDao.getCountHotelCitys(id);
+		int sumPage = (int) Math.ceil((float) totalHotels / Defines.ROW_COUNT_PUBLIC);
+		model.addAttribute("sumPage", sumPage);
+		int offset = (page - 1) * Defines.ROW_COUNT_PUBLIC;
+		model.addAttribute("page", page);
 
-	@RequestMapping(value = { "/rooms", "/rooms/{page}" })
-	public String index(@PathVariable(value = "page", required = false) Integer page, ModelMap model,
+		if (page == 1) {
+			List<Hotel> listhotelsRecommend = new ArrayList<Hotel>();
+			if (session.getAttribute("userPublic") != null) {
+				listhotelsRecommend = hotelDao.getListHotelCity(offset,id);
+			} else {
+				listhotelsRecommend = hotelDao.getListHotelCity(offset,id);
+			}
+			model.addAttribute("listHotels", listhotelsRecommend);
+		} else {
+			model.addAttribute("listHotels", hotelDao.getListHotelCity(offset,id));
+		}
+		model.addAttribute("city_id", id);
+		model.addAttribute("city", cityDao.getCity(id));
+		return "public.hotels";
+		
+	}
+
+	@RequestMapping(value = { "/rooms/{id_hotel}","/rooms/{page}/{id_hotel}" })
+	public String index(@PathVariable(value = "page", required = false) Integer page ,@PathVariable("id_hotel") int id_hotel, ModelMap model,
 			HttpSession session) {
 		if (page == null) {
 			page = 1;
 		}
-		int totalRooms = roomDao.getCountRooms();
+		int totalRooms = 0;
+		if(id_hotel != -1) {
+			totalRooms = roomDao.getCountRoomsID(id_hotel);
+		}else {
+			totalRooms = roomDao.getCountRooms();
+		}
+		
 		int sumPage = (int) Math.ceil((float) totalRooms / Defines.ROW_COUNT_PUBLIC);
 		model.addAttribute("sumPage", sumPage);
 		int offset = (page - 1) * Defines.ROW_COUNT_PUBLIC;
@@ -119,7 +159,7 @@ public class PublicRoom {
 		if (page == 1) {
 			List<Room> listRoomsRecommend = new ArrayList<Room>();
 			if (session.getAttribute("userPublic") != null) {
-//				User userPublic = (User) session.getAttribute("userPublic");
+				User userPublic = (User) session.getAttribute("userPublic");
 //				List<Integer> listIdRooms = defines.GetRomsCollaborative(userPublic.getId_user());
 //				String temp = "";
 //
@@ -144,15 +184,30 @@ public class PublicRoom {
 //					List<Room> listIdRoomsAdd = roomDao.getRoomsAdd(10 - listRoomsRecommend.size());
 //					listRoomsRecommend.addAll(listIdRoomsAdd);
 //				}
-				listRoomsRecommend = roomDao.getListRoomsLimit(offset);
+				if(id_hotel != -1) {
+					listRoomsRecommend = roomDao.getListRoomsHotelLimit(offset, id_hotel);
+					model.addAttribute("id_hotel", id_hotel);
+				}else {
+					listRoomsRecommend = roomDao.getListRoomsLimit(offset);
+				}
+				model.addAttribute("userPublic", userPublic);
+				
 			} else {
-				listRoomsRecommend = roomDao.getListRoomsLimit(offset);
+				if(id_hotel != -1) {
+					listRoomsRecommend = roomDao.getListRoomsHotelLimit(offset,id_hotel);
+					model.addAttribute("id_hotel", id_hotel);
+				}else {
+					listRoomsRecommend = roomDao.getListRoomsLimit(offset);
+				}
 			}
 			model.addAttribute("listRooms", listRoomsRecommend);
+			
 		} else {
+			
 			model.addAttribute("listRooms", roomDao.getListRoomsLimit(offset));
+			model.addAttribute("id_hotel", id_hotel);
 		}
-
+		
 		return "public.rooms";
 	}
 

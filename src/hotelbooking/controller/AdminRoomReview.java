@@ -44,7 +44,17 @@ public class AdminRoomReview {
 			if (userAdmin.getRole_id() == 1) {
 				model.addAttribute("listRoomReviews", roomReviewDao.getListRoomReviews());
 				return "admin.roomreview.index";
-			} else {
+			}else if(userAdmin.getRole_id() == 2 || userAdmin.getRole_id() == 3){
+				if(userAdmin.getHotel_id() != -1) {
+					model.addAttribute("listRoomReviews", roomReviewDao.getListRoomReviewHotels(userAdmin.getHotel_id()));
+					model.addAttribute("checkrole",2);
+					return "admin.roomreview.index";
+				}else {
+					ra.addFlashAttribute("error", "Bạn không thể thực hiện chức năng này!");
+					return "redirect:/admin/index";
+				}
+			} 
+			else {
 				ra.addFlashAttribute("error", "Bạn không thể thực hiện chức năng này!");
 				return "redirect:/admin/index";
 			}
@@ -72,6 +82,17 @@ public class AdminRoomReview {
 		}
 
 		return "redirect:/admin/roomreview/index";
+	}
+	
+	@RequestMapping(value = "/request/{id_review}", method = RequestMethod.GET)
+	public String editrequest(@PathVariable("id_review") int id_review, ModelMap model,RedirectAttributes ra) {
+		
+		if (roomReviewDao.editRoomReviewRequest(id_review) > 0) {
+			ra.addFlashAttribute("success", "Yêu cầu xóa thành công!");
+		} else {
+			ra.addFlashAttribute("error", "Hệ thống đang bảo trì, vui lòng thực hiện chức năng này sau!");
+		}
+		return "redirect:/admin/hotelreview/index";
 	}
 
 	@RequestMapping(value = "/del/{id_review}", method = RequestMethod.GET)

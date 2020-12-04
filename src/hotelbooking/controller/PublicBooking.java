@@ -164,6 +164,11 @@ public class PublicBooking {
 		}
 		if ((!"".equals(check.getCheckin())) || (!"".equals(check.getCheckout()))) {
 			if (defines.checkDate(check) && defines.checkDateCheckIn(check)) {
+				if(bookingDao.CheckDate(check.getCheckin(),check.getCheckout(),id_room)>0){
+					ra.addFlashAttribute("msg",
+							"<div class='alert alert-danger' role='alert'>Phòng đã được người khác đặt trong thời gian này rồi.</div>");
+					return "redirect:/public/single_room/" + id_room;
+				}
 				int day = defines.checkQuantityDate(check);
 				if ((day > 0) && (day < 11)) {
 					int soLuong;
