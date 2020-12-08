@@ -148,7 +148,10 @@ public class PublicSingleRoom {
 			listHotelsRecommend.addAll(listIdHotelsAdd);
 		}
 		String appPath = request.getServletContext().getRealPath("");
-		model.addAttribute("checkUserBooking", bookingDao.CheckUserHotel(id_hotel,userPublic.getId_user()));
+		if(userPublic != null) {
+			model.addAttribute("checkUserBooking", bookingDao.CheckUserHotel(id_hotel,userPublic.getId_user()));
+		}
+		
 //		model.addAttribute("listHotelTop9", listHotelsRecommend);
 		model.addAttribute("listHotelTop9", defines.recomhotel(id_hotel,appPath,10));
 		model.addAttribute("userPublic", userPublic);

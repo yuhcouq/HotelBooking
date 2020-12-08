@@ -166,7 +166,7 @@
 							<%-- <img
 							src="${defines.urlPublic}/img/core-img/logo.png" alt=""> --%>
 							<h4 style="    font-weight: 900;color: #5ba59e;font-size: 38px;font-style: italic;font-family: cursive;
-}">Yuh Couq</h4>
+}">Luxury Hotel</h4>
 						</a>
 
 						<!-- Navbar Toggler -->

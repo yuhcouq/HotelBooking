@@ -55,12 +55,17 @@ public class AdminRoom {
 		modelMap.addAttribute("defines", defines);
 	}
 
-	@RequestMapping("/index")
-	public String index(ModelMap model, HttpSession session, RedirectAttributes ra) {
+	@RequestMapping(value = {"/index","/index/{id_hotel}"})
+	public String index(ModelMap model, HttpSession session, RedirectAttributes ra,@PathVariable(value = "id_hotel", required = false) Integer id_hotel) {
 		if (session.getAttribute("userAdmin") != null) {
 			User userAdmin = (User) session.getAttribute("userAdmin");
 			if (userAdmin.getRole_id() == 1) {
-				model.addAttribute("listRooms", roomDao.getListRooms());
+				if(id_hotel != null) {
+					model.addAttribute("listRooms", roomDao.getAllRoomsOfHotel(id_hotel));
+				}else {
+					model.addAttribute("listRooms", roomDao.getListRooms());
+				}
+				
 				return "admin.room.index";
 			}else {
 				model.addAttribute("listRooms", roomDao.getAllRoomsOfHotel(userAdmin.getHotel_id()));

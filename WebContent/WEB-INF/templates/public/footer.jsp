@@ -19,9 +19,8 @@
 							src="${defines.urlPublic}/img/core-img/logo2.png" alt=""> --%>
 						</a>
 
-						<h4>+12 345-678-9999</h4>
-						<span>Info.colorlib@gmail.com</span> <span>856 Cordia
-							Extension Apt. 356, Lake Deangeloburgh, South Africa</span>
+						<h4>+84 983-800-048</h4>
+						<span>yuhcouq10@gmail.com</span> <span>Hồ Bá Ôn, Hòa Minh, Đà Nẵng</span>
 					</div>
 				</div>
 

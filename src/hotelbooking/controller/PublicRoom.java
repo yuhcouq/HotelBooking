@@ -133,7 +133,10 @@ public class PublicRoom {
 			model.addAttribute("listHotels", hotelDao.getListHotelCity(offset,id));
 		}
 		model.addAttribute("city_id", id);
-		model.addAttribute("city", cityDao.getCity(id));
+		if(cityDao.checkCity(id)>0) {
+			model.addAttribute("city", cityDao.getCity(id));
+		}
+		
 		return "public.hotels";
 		
 	}

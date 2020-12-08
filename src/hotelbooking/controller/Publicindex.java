@@ -171,8 +171,9 @@ public class Publicindex {
 		return "public.rooms";
 	}
 
-	@RequestMapping("/public/check_index")
-	public String check_index(@ModelAttribute("check") Check check, ModelMap model) {
+	@RequestMapping(value = {"/public/check_index","/public/check_index/{page}"})
+	public String check_index(@PathVariable(value = "page", required = false) Integer page , @ModelAttribute("check") Check check, ModelMap model) {
+		
 		String sql = "SELECT r.*,h.hotel_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel WHERE 1=1";
 		if (!"00".equals(check.getAdults())) {
 			sql += " AND r.adult_number = %s";
@@ -203,7 +204,22 @@ public class Publicindex {
 			sql += " AND r.id_room NOT IN (SELECT b.room_id FROM booking b WHERE (b.checkin < '%s' AND b.checkout > '%s'))";
 			sql = String.format(sql, check.getCheckout(), check.getCheckout());
 		}
-		sql += " LIMIT 10";
+		if (page == null) {
+			page = 1;
+		}
+		int offset = (page - 1) * Defines.ROW_COUNT_PUBLIC;
+		model.addAttribute("page", page);
+		List<Room> listRoom = roomDao.check_index(sql);
+		
+		sql += " LIMIT "+offset+",10";
+		int totalRooms = 0;
+		for(Room room : listRoom) {
+			totalRooms++;
+		}
+		totalRooms = roomDao.getCountRooms();
+		int sumPage = (int) Math.ceil((float) totalRooms / Defines.ROW_COUNT_PUBLIC);
+		model.addAttribute("sumPage", sumPage);
+		
 		System.out.println(sql);
 		model.addAttribute("check", check);
 		model.addAttribute("listRooms", roomDao.check_index(sql));

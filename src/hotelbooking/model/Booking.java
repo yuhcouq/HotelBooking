@@ -31,6 +31,7 @@ public class Booking {
 	private int check_move;
 	private String created_time;
 	private Room room;
+	private int discount;
 
 	public Booking() {
 		super();
@@ -41,7 +42,7 @@ public class Booking {
 			String image, Float price, int user_id, String firstname, String lastname, String phone, String email,
 			int gender, String birthday, String city, String address, String checkin, String checkout, int day,
 			Float total_price, int paid, int prepayment, int status, String note, int check_move, String created_time,
-			Room room) {
+			Room room,int discount) {
 		super();
 		this.id_booking = id_booking;
 		this.code = code;
@@ -71,6 +72,7 @@ public class Booking {
 		this.check_move = check_move;
 		this.created_time = created_time;
 		this.room = room;
+		this.discount = discount;
 	}
 
 	public static int getCode_auto() {
@@ -95,6 +97,14 @@ public class Booking {
 
 	public void setCode(int code) {
 		this.code = code;
+	}
+	
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 
 	public int getHotel_id() {

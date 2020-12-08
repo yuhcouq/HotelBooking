@@ -173,7 +173,13 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/admin/statistical/index.jsp"></put-attribute>
 	</definition>
-
+	
+	<definition name="admin.discount"
+		extends="admin.template">
+		<put-attribute name="body"
+			value="/WEB-INF/views/admin/discount/index.jsp"></put-attribute>
+	</definition>
+	
 	<!-- Public Template -->
 	<definition name="public.template"
 		template="/WEB-INF/templates/public/template.jsp">
@@ -276,7 +282,7 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/public/contact.jsp"></put-attribute>
 	</definition>
-
+	
 	<!-- error 404 -->
 	<definition name="err.403"
 		template="/WEB-INF/views/admin/err/403.jsp">

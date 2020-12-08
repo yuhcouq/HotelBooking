@@ -20,12 +20,13 @@
 									<th>CheckOut</th>
 									<th>Day</th>
 									<th>ToTal Price</th>
+									<th>Discount</th>
 									<th>Delete</th>
 								</tr>
 							</thead>
 							<tbody>
 								<c:forEach var="booking" items="${listBooking}">
-								<c:set value="${tongtien + booking.total_price}" var="tongtien"></c:set>
+								<c:set value="${tongtien + booking.total_price-(booking.discount*booking.total_price/100)}" var="tongtien"></c:set>
 									<tr class="text-center">
 										<td class="product-name">
 											<h5>${booking.hotel_name}</h5>
@@ -41,6 +42,7 @@
 										<td class="quantity">${booking.checkout}</td>
 										<td class="quantity">${booking.day}</td>
 										<td class="quantity">${defines.formatNumber(booking.total_price)}</td>
+										<td class="quantity">${(booking.discount)}%</td>
 										<td><a href="javascript:;"
 											class="btn btn-primary a-btn-slide-text"
 											style="background-color: #F5F5F5; color: black;"

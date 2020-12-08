@@ -34,6 +34,11 @@ public class CityDao {
 		return jdbcTemplate.queryForObject(sql, new Object[] { id_city },
 				new BeanPropertyRowMapper<City>(City.class));
 	}
+	
+	public int checkCity(int id_city) {
+		String sql = "SELECT COUNT(*) FROM city WHERE id_city = ? AND del = 0";
+		return jdbcTemplate.queryForObject(sql, new Object[] { id_city },Integer.class);
+	}
 
 	public int editCity(City city) {
 		String sql = "UPDATE city SET city_name = ? WHERE id_city = ? ";

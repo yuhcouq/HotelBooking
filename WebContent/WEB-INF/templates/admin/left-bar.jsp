@@ -187,6 +187,9 @@
 								<li><a title="Widgets"
 									href="${pageContext.request.contextPath}/admin/roomreview/index"><span
 										class="mini-sub-pro">Room Reviews</span></a></li>
+								<li><a title="Widgets"
+									href="${pageContext.request.contextPath}/admin/discount/index"><span
+										class="mini-sub-pro">Discount</span></a></li>
 								<c:if test="${userAdmin.role_id == 1}">
 									<li><a title="Widgets"
 										href="${pageContext.request.contextPath}/admin/slide/index"><span
@@ -215,11 +218,11 @@
 										href="${pageContext.request.contextPath}/admin/user/index/4"><span
 											class="mini-sub-pro">Người dùng</span></a></li>
 								</c:if>
-								<c:if test="${userAdmin.role_id == 2}">
+								<%-- <c:if test="${userAdmin.role_id == 2}">
 									<li><a title="Quản lý nhân viên"
 										href="${pageContext.request.contextPath}/admin/user/index/3"><span
 											class="mini-sub-pro">Nhân viên</span></a></li>
-								</c:if>
+								</c:if> --%>
 							</ul>
 						</li>
 						<%-- <li><a title="Landing Page" href="events.html"

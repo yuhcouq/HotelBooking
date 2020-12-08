@@ -201,7 +201,11 @@ public class PublicBooking {
 					}
 					if (checkTemp == false) {
 						soLuong++;
-
+						int discount = 0;
+						if(bookingDao.checkDiscountRoom(id_room)>0) {
+							discount = bookingDao.discountRoom(id_room);
+						}
+						
 						Booking booking = new Booking();
 						booking.setRoom_id(id_room);
 						booking.setRoom_number(room.getRoom_number());
@@ -210,12 +214,13 @@ public class PublicBooking {
 						booking.setHotel_name(room.getHotel_name());
 						booking.setPrice(room.getPrice());
 						booking.setTotal_price(room.getPrice() * day);
+						booking.setDiscount(discount);
 						booking.setCheckin(check.getCheckin());
 						booking.setCheckout(check.getCheckout());
 						booking.setDay(day);
 						booking.setPrepayment(room.getPrepayment());
 						listBooking.add(booking);
-
+						
 						session.setAttribute("soluong", soLuong);
 						session.setAttribute("listBooking", listBooking);
 					}

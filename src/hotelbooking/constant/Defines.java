@@ -668,10 +668,10 @@ public class Defines {
 				crunchifyException.printStackTrace();
 			}
 		}
-		if(countUser<max) {
-			max = countUser;
-		}
-		for(int k = 0 ; k <= max-1 ; k++) {
+//		if(countUser<max) {
+//			max = countUser;
+//		}
+		for(int k = 0 ; k <= countUser-1 ; k++) {
 			for(int l = k+1 ; l < countUser ; l++) {
 				if(result[index][k] < result[index][l]) {
 					float t = result[index][k];
@@ -691,6 +691,9 @@ public class Defines {
 			}
 		}
 		List<Booking> listRecomRoom = bookingDao.getUserBooking(kq,id);
+		if(max == 0) {
+			listRecomRoom = bookingDao.getUserBookingAll(kq,id);
+		}
 		String listRoomBooking = "";
 		int p = 0;
 		for(Booking b : listRecomRoom) {
@@ -701,7 +704,9 @@ public class Defines {
 			}
 			p++;
 		}
-		
+		if(max == 0) {
+			return roomDao.getListRoomForUserRecomAlls(listRoomBooking,id);
+		}
 		return roomDao.getListRoomForUserRecom10s(listRoomBooking,id);
 	}
 

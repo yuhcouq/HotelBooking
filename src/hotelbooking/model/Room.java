@@ -37,6 +37,7 @@ public class Room implements Serializable {
 	private String createdAt;
 	private String updatedAt;
 	private int del;
+	private int discount;
 	public Room() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -45,7 +46,7 @@ public class Room implements Serializable {
 			int bed_number, int status, Float rating, String image, String description, String detail, Float price,
 			int prepayment, String hotel_name, String hotel_image, int city_id, String city_name, float acreage,
 			String wifi, String television, String conditioning, String drinks, String restaurant, String service,
-			long quantity, String checkin, String checkout, String createdAt, String updatedAt, int del) {
+			long quantity, String checkin, String checkout, String createdAt, String updatedAt, int del,int discount) {
 		super();
 		this.id_room = id_room;
 		this.hotel_id = hotel_id;
@@ -78,6 +79,7 @@ public class Room implements Serializable {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.del = del;
+		this.discount = discount;
 	}
 	public int getId_room() {
 		return id_room;
@@ -187,6 +189,13 @@ public class Room implements Serializable {
 	}
 	public void setDel(int del) {
 		this.del = del;
+	}
+	
+	public int getDiscount() {
+		return discount;
+	}
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 	
 	public String getCity_name() {

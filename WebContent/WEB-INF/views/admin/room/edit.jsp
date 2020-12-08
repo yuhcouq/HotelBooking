@@ -122,13 +122,13 @@
 									<label>Mô tả <span style="color: red;">*</span></label>
 									<textarea name="detail" class="form-control" rows="3"
 										style="border-radius: 5px; width: 700px; margin-left: 15px;"
-										required>${room.description}</textarea>
+										required>${room.detail}</textarea>
 								</div>
 								<div class="form-group-inner">
 									<label>Chi tiết <span style="color: red;">*</span></label>
 									<textarea name="description" class="form-control" rows="3"
 										style="border-radius: 5px; width: 700px; height: 195px; margin-left: 15px;"
-										required>${room.detail}</textarea>
+										required>${room.description}</textarea>
 								</div>
 								<div class="">
 									<input type="reset" value="Clear" class="button-clear"

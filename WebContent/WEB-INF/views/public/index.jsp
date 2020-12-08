@@ -19,7 +19,7 @@
 									<h6 data-animation="fadeInLeft" data-delay="200ms">Hotel
 										&amp; Resort</h6>
 									<h2 data-animation="fadeInLeft" data-delay="500ms">Welcome
-										To Yuhcouq Booking</h2>
+										To Luxury Booking</h2>
 									<a href="#" class="btn roberto-btn btn-2"
 										data-animation="fadeInLeft" data-delay="800ms">Discover
 										Now</a>
@@ -90,15 +90,13 @@
 			<div class="col-12 col-lg-6">
 				<!-- Section Heading -->
 				<div class="section-heading wow fadeInUp" data-wow-delay="100ms">
-					<h6>Giới thiệu về HS Hotel</h6>
+					<h6>About the Luxury Hotel</h6>
 					<h2>
-						Chào mừng đến với <br>HS Hotel Luxury
+						Welcome to <br>Luxury Hotel
 					</h2>
 				</div>
 				<div class="about-us-content mb-100">
-					<h5 class="wow fadeInUp" data-wow-delay="300ms">Với hơn 340
-						khách sạn trên toàn thế giới, HS Hotel Group cung cấp nhiều loại
-						khách sạn phục vụ cho một kỳ nghỉ hoàn hảo cho dù bạn đến ở đâu.</h5>
+					<h5 class="wow fadeInUp" data-wow-delay="300ms">With a large hotel system, Luxury Hotel confidently can provide you with the right hotels according to your requirements. Wherever you are, Luxury will provide you. .</h5>
 					<p class="wow fadeInUp" data-wow-delay="400ms"
 						style="font-family: Trio; font-weight: bold;">
 						Manager: <span>Quốc Huy</span>
@@ -200,7 +198,7 @@
 				<!-- Content -->
 				<div class="room-content">
 					<h2 data-animation="fadeInUp" data-delay="100ms">${room.name}<br>
-						<span style="font-size: 15px;">City : </span><span
+						<span style="font-size: 15px;">Thành phố : </span><span
 							style="font-size: 25px; color: #1CC3B2;">${room.city_name}</span>
 					</h2>
 					<h3 data-animation="fadeInUp" data-delay="300ms">
@@ -420,7 +418,7 @@
 <!-- Blog Area End -->
 
 <!-- Call To Action Area Start -->
-<section class="roberto-cta-area">
+<%-- <section class="roberto-cta-area">
 	<div class="container">
 		<div class="cta-content bg-img bg-overlay jarallax"
 			style="background-image: url(${defines.urlPublic}/img/bg-img/1.jpg);">
@@ -437,7 +435,7 @@
 			</div>
 		</div>
 	</div>
-</section>
+</section> --%>
 <!-- Call To Action Area End -->
 
 <!-- Partner Area Start -->

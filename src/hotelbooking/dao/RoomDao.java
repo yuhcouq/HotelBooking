@@ -38,6 +38,26 @@ public class RoomDao {
 		return jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 	
+	public int checkDiscountRoom(int id_room) {
+		String sql = "SELECT COUNT(*) FROM discount WHERE room_id = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[] { id_room }, Integer.class);
+	}
+	
+	public int getDiscountRoom(int id_room) {
+		String sql = "SELECT discount FROM discount WHERE room_id = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[] { id_room }, Integer.class);
+	}
+	
+	public int addDiscount(int id_room, int discount) {
+		String sql = "INSERT INTO discount(room_id,discount) VALUE (?,?) ";
+		return jdbcTemplate.update(sql, new Object[] { id_room,discount});
+	}
+	
+	public int deleteDiscount(int id_room) {
+		String sql = "DELETE FROM discount WHERE room_id = ?";
+		return jdbcTemplate.update(sql, new Object[] { id_room});
+	}
+	
 	public int getCountListRooms() {
 		String sql = "SELECT COUNT(*) FROM room WHERE del = 0";
 		return jdbcTemplate.queryForObject(sql, Integer.class);
@@ -53,6 +73,14 @@ public class RoomDao {
 			id = "-1";
 		}
 		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id  WHERE r.del = 0 AND r.id_room NOT IN (SELECT room_id FROM booking WHERE user_id = ? GROUP BY room_id) ORDER BY FIELD(r.id_room,"+id+") DESC limit 10";
+		return jdbcTemplate.query(sql, new Object[] { user_id }, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
+	public List<Room> getListRoomForUserRecomAlls(String id, int user_id) {
+		if(id == "") {
+			id = "-1";
+		}
+		String sql = "SELECT r.*,h.hotel_name, c.city_name FROM room AS r INNER JOIN hotel AS h ON r.hotel_id = h.id_hotel INNER JOIN city c ON c.id_city = h.city_id  WHERE r.del = 0 AND r.id_room NOT IN (SELECT room_id FROM booking WHERE user_id = ? GROUP BY room_id) ORDER BY FIELD(r.id_room,"+id+") DESC";
 		return jdbcTemplate.query(sql, new Object[] { user_id }, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 	
@@ -186,6 +214,10 @@ public class RoomDao {
 	}
 
 	public List<Room> check_index(String sql) {
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
+	}
+	
+	public List<Room> count_check_index(String sql) {
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Room>(Room.class));
 	}
 

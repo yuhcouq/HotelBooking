@@ -35,7 +35,7 @@ public class BookingDao {
 				new Object[] { Booking.getCode_auto(), booking.getHotel_id(), booking.getRoom_id(), user.getId_user(),
 						user.getFirstname(), user.getLastname(), user.getPhone(), user.getEmail(), user.getGender(),
 						user.getBirthday(), user.getCity(), user.getAddress(), booking.getCheckin(),
-						booking.getCheckout(), booking.getDay(), booking.getTotal_price(), booking.getPrepayment(),-1,
+						booking.getCheckout(), booking.getDay(),booking.getTotal_price()-(booking.getTotal_price()* booking.getDiscount()/100), booking.getPrepayment(),-1,
 						user.getNote(), booking.getCheck_move(), booking.getCreated_time() });
 	}
 
@@ -151,6 +151,16 @@ public class BookingDao {
 		String sql = "DELETE FROM booking WHERE id_booking = ? ";
 		return jdbcTemplate.update(sql, new Object[] { id_booking });
 	}
+	
+	public int checkDiscountRoom(int id_room) {
+		String sql = "SELECT COUNT(*) FROM discount WHERE room_id = ? ";
+		return jdbcTemplate.queryForObject(sql, new Object[] { id_room }, Integer.class);
+	}
+	
+	public int discountRoom(int id_room) {
+		String sql = "SELECT discount FROM discount WHERE room_id = ? ";
+		return jdbcTemplate.queryForObject(sql, new Object[] { id_room }, Integer.class);
+	}
 
 	public Booking getCusromerBooking(int code) {
 		String sql = "SELECt * FROM booking WHERE code = ?";
@@ -160,6 +170,12 @@ public class BookingDao {
 	
 	public List<Booking> getUserBooking(String id_user,int id) {
 		String sql = "SELECT * FROM `booking` WHERE room_id NOT IN (SELECT room_id FROM booking WHERE user_id = ? GROUP BY room_id) GROUP BY room_id ORDER BY FIELD(user_id,"+id_user+") DESC limit 10";
+		return jdbcTemplate.query(sql, new Object[] { id },
+				new BeanPropertyRowMapper<Booking>(Booking.class));
+	}
+	
+	public List<Booking> getUserBookingAll(String id_user,int id) {
+		String sql = "SELECT * FROM `booking` WHERE room_id NOT IN (SELECT room_id FROM booking WHERE user_id = ? GROUP BY room_id) GROUP BY room_id ORDER BY FIELD(user_id,"+id_user+") DESC";
 		return jdbcTemplate.query(sql, new Object[] { id },
 				new BeanPropertyRowMapper<Booking>(Booking.class));
 	}

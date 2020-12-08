@@ -10,6 +10,7 @@ public class Check {
 	private String search;
 	private int check;
 	private int hotel_id;
+	private int page;
 
 	public Check() {
 		super();
@@ -17,7 +18,7 @@ public class Check {
 	}
 
 	public Check(String checkin, String checkout, String adults, String children, String min_price, String max_price,
-			String search, int check, int hotel_id) {
+			String search, int check, int hotel_id,int page) {
 		super();
 		this.checkin = checkin;
 		this.checkout = checkout;
@@ -28,6 +29,7 @@ public class Check {
 		this.search = search;
 		this.check = check;
 		this.hotel_id = hotel_id;
+		this.page = page;
 	}
 
 	public String getCheckin() {
@@ -92,6 +94,14 @@ public class Check {
 
 	public void setCheck(int check) {
 		this.check = check;
+	}
+	
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
 	}
 
 	public int getHotel_id() {

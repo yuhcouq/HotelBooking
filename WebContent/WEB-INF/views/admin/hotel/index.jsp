@@ -83,6 +83,10 @@
 														style="background-color: #F5F5F5;"> <span
 														class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 														<span><strong>Xóa</strong></span>
+													</a> <a
+														href="${pageContext.request.contextPath}/admin/room/index/${hotel.id_hotel}" class="btn btn-primary a-btn-slide-text"
+														style="background-color: #F5F5F5;">
+														<span><strong>Xem phòng</strong></span>
 													</a>
 												</p></td>
 										</tr>

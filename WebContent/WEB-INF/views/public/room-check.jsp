@@ -1,6 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="/templates/taglib.jsp"%>
+<head>
+	<script>
+		$(document).ready(function(){
+			$(".page-link").on("click",function(){
+				var page = $(this).data("page");
+				$(".form-check-index").attr("action","${pageContext.request.contextPath }/public/check_index/"+page+"");
+				$( ".form-check-index" ).trigger( "submit" );
+			})
+		})
+		
+	</script>
+</head>
 <!-- Breadcrumb Area Start -->
 <div class="breadcrumb-area bg-img bg-overlay jarallax"
 	style="background-image: url(img/bg-img/16.jpg);">
@@ -47,7 +59,7 @@
 						<div class="room-content">
 							<h3>${room.name}</h3>
 							<h4>
-								${defines.formatNumber(room.price)} <span>/ Ngày</span>
+								${defines.formatNumber(room.price)} <span>/ Ngày (Giảm ${room.discount}%)</span>
 							</h4>
 							<div class="room-feature" style="margin-bottom: 0px;">
 								<h6>
@@ -77,13 +89,26 @@
 					</div>
 				</c:forEach>
 				<!-- Pagination -->
-
+				<nav class="roberto-pagination wow fadeInUp mb-100"
+					data-wow-delay="1000ms">
+					<ul class="pagination">
+						<c:forEach var="i" begin="1" end="${sumPage}">
+							<li class="page-item"><a class="page-link"
+								<c:if test="${page == i }">style="background-color: #24C5B5"</c:if>
+								href="#" data-page = "${i}">${i}</a></li>
+						</c:forEach>
+						<li class="page-item"><a class="page-link"
+							href="#" data-page = "${sumPage}">End
+								<i class="fa fa-angle-right"></i>
+						</a></li>
+					</ul>
+				</nav>
 			</div>
 
 			<div class="col-12 col-lg-4">
 				<!-- Hotel Reservation Area -->
 				<div class="hotel-reservation--area mb-100">
-					<form
+					<form class = "form-check-index"
 						action="${pageContext.request.contextPath }/public/check_index"
 						method="post" style="margin-bottom: 300px;">
 						<div class="form-group mb-30">

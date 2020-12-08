@@ -48,7 +48,7 @@
 						<div class="room-content">
 							<h3>${room.name}</h3>
 							<h4>
-								${defines.formatNumber(room.price)} <span>/ Ngày</span>
+								${defines.formatNumber(room.price)} <span>/ Ngày (Giảm ${room.discount}%)</span>
 							</h4>
 							<div class="room-feature" style="margin-bottom: 0px;">
 								<h6>
